@@ -27,9 +27,5 @@ def main():
             downoald_with_url(getInput, directory) 
     except KeyboardInterrupt:
         exit(0)
-        
-
-
-        
 
 main()

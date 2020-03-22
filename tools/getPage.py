@@ -13,4 +13,6 @@ def get_an_page(url):
     except requests.exceptions.RequestException as e:
         print_error_request(e, url)
         return None
-    return (BeautifulSoup(r.text, features="html.parser"))
+    if (r.status_code != 200):
+        return None
+    return (r)
