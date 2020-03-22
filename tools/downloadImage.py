@@ -7,10 +7,10 @@ def downloadImage(path, url):
     if not (os.path.isfile(path)):
         r = get_an_page(url)
         if (r == None or imghdr.what(None, r.content) == None):
-            return None
+            return False
         os.makedirs(os.path.dirname(path), exist_ok=True)
-        print ("Dont Excist")
         with open(path, 'wb') as f:
             f.write(r.content)
+        return (True)
     else:
-        print ('Ecxist')
+        return (None)
