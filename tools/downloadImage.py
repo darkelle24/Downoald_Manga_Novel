@@ -1,11 +1,11 @@
 import os
 import requests
 import imghdr
-from tools.getPage import *
+from tools.getPage import getAPage
 
 def downloadImage(path, url):
     if not (os.path.isfile(path)):
-        r = get_an_page(url)
+        r = getAPage(url)
         if (r == None or imghdr.what(None, r.content) == None):
             return False
         os.makedirs(os.path.dirname(path), exist_ok=True)

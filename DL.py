@@ -2,29 +2,33 @@
 
 from sys import exit
 import os
-from Site.ISite import *
-from Site.manga.isekaiscan import *
+from include.Site import Site
+from tools.loadAllSite import loadAllSite
+from tools.loadAllManga import loadAllManga
 
-site = {"isekaiscan.com": isekaiscan}
-
-def downoald_with_url(url, directory):
-    for name, site_class in site.items():
-        if (url.split("/")[2] == name):
-            site_class.urlDownload(url=url, directory=directory)
+def downloadWithUrl(url, directory, sites, mangas):
+    for site in sites:
+        if (url.split("/")[2] == site.url):
+            site.urlManager(url, mangas, directory)
             break
 
 def main():
     getInput = ""
     directory = ""
+    sites = []
+    mangas = []
 
     os.system('color')
+    sites = loadAllSite()
+    mangas = loadAllManga()
     try:
-        directory = input(">>> Path to Directory: ")
-        if (directory != "" and (directory[-1] != '\\' or directory[-1] != '/')):
-            directory = directory + '\\'
         while (getInput != "STOP"):
             getInput = input(">>> ")
-            downoald_with_url(getInput, directory) 
+            if (getInput.startswith("http")) :
+                downloadWithUrl(getInput, directory, sites, mangas)
+            elif (getInput == "Site"):
+                for site in sites:
+                    print(site.url)
     except KeyboardInterrupt:
         exit(0)
 
