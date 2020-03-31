@@ -2,6 +2,7 @@ from include.Site import Site, UrlType
 from typing import Tuple, List, Union, Dict
 from bs4 import BeautifulSoup
 from tools.getPage import getAPage
+import os
 
 class isekaiscan(Site):
     url = "isekaiscan.com"
@@ -12,7 +13,7 @@ class isekaiscan(Site):
         info["name"] = name
         return info
 
-    def recupOneChapter(self, soup: BeautifulSoup)->List[Tuple[str, int, int]]:
+    def recupOneChapter(self, soup: BeautifulSoup, path: str)->List[Tuple[str, int, int, str]]:
         images = []
 
         chapter = soup.find("h1", attrs={"id": "chapter-heading"})
@@ -21,7 +22,7 @@ class isekaiscan(Site):
             if (link.has_attr("id") == True and link.get("id").find("image") != -1):
                 url = link.get("data-src").lstrip()
                 nbr = link.get("id").replace("image-", "")
-                images.append((url, int(nbr), chapter))
+                images.append((url, int(nbr), chapter, os.path.join(path, nbr + url[url.rfind("."):])))
         return (images)
 
     def recupAllChapter(self, soup: BeautifulSoup) -> List[Tuple[str, str]]:
