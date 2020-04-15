@@ -22,13 +22,16 @@ def main():
     sites = loadAllSite()
     mangas = loadAllManga()
     try:
-        while (getInput != "STOP"):
+        while (getInput.lower() != "stop"):
             getInput = input(">>> ")
             if (getInput.startswith("http")) :
                 downloadWithUrl(getInput, directory, sites, mangas)
-            elif (getInput == "Site"):
+            elif (getInput.lower() == "site"):
                 for site in sites:
                     print(site.url)
+            elif (getInput.lower() == "manga"):
+                for manga in mangas:
+                    print(manga.name)
     except KeyboardInterrupt:
         exit(0)
 

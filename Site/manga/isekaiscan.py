@@ -9,15 +9,18 @@ class isekaiscan(Site):
 
     def recupInfoManga(self, soup: BeautifulSoup, info: Dict[str, str])-> Dict[str, str]:
         name = soup.find("h3")
-        name = name.string.strip()
+        if (name.string == None):
+            name = name.text.replace("HOT", "").replace("NEW", "").strip()
+        else:
+            name = name.string.replace("HOT", "").replace("NEW", "").strip()
         info["name"] = name
         return info
 
-    def recupOneChapter(self, soup: BeautifulSoup, path: str)->List[Tuple[str, int, int, str]]:
+    def recupOneChapter(self, soup: BeautifulSoup, path: str)->List[Tuple[str, int, str, str]]:
         images = []
 
         chapter = soup.find("h1", attrs={"id": "chapter-heading"})
-        chapter = int (chapter.string.split(" ")[-1])
+        chapter = chapter.string.split(" ")[-1]
         for link in soup.find_all('img'):
             if (link.has_attr("id") == True and link.get("id").find("image") != -1):
                 url = link.get("data-src").lstrip()
