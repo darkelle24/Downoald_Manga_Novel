@@ -36,13 +36,13 @@ class isekaiscan(Site):
             return None
         for one_chapter in ul.find_all("li"):
             if (one_chapter.has_attr("class") == True and one_chapter.get("class")[0].find("wp-manga-chapter") != -1):
-                list_chapter.append((one_chapter.a.get("href"), one_chapter.a.string.strip().replace("Chapter ", "").replace("chapter", "")))
+                list_chapter.append((one_chapter.a.get("href"), one_chapter.a.string.strip().replace("Chapter", "").replace("chapter", "").strip()))
         return (list_chapter)
 
     def getChapterNbrFromUrl(self, urlChapter: str)-> str:
         if (urlChapter[-1] == "/"):
             urlChapter = urlChapter[:-1]
-        return urlChapter[urlChapter.rfind("/"):].replace("chapter-", "")
+        return urlChapter[urlChapter.rfind("/"):].replace("chapter-", "").strip()
 
     def analyseURL(self, url:str)->UrlType :
         if (url[-1] == "/"):
