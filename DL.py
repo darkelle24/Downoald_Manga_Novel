@@ -6,14 +6,24 @@ from include.Site import Site
 from tools.loadAllSite import loadAllSite
 from tools.loadAllManga import loadAllManga
 
-def downloadWithUrl(url, directory, sites, mangas):
+def downloadWithUrl(opts, directory, sites, mangas):
+    url = ""
+    good = False
+
+    for opt in opts:
+        if (opt.startswith("http")):
+            url = opt
+            break
     for site in sites:
         if (url.split("/")[2] == site.url):
-            site.urlManager(url, mangas, directory)
+            site.urlManager(url, opts, mangas, directory)
+            good = True
             break
+    if (good == False):
+        print("This site is not implemented")
 
 def main():
-    getInput = ""
+    getInput = []
     directory = ""
     sites = []
     mangas = []
@@ -22,16 +32,18 @@ def main():
     sites = loadAllSite()
     mangas = loadAllManga()
     try:
-        while (getInput.lower() != "stop"):
-            getInput = input(">>> ")
-            if (getInput.startswith("http")) :
+        while (getInput == [] or getInput[0].lower() != "stop"):
+            getInput = input(">>> ").split(" ")
+            if (getInput[0].startswith("download")) :
                 downloadWithUrl(getInput, directory, sites, mangas)
-            elif (getInput.lower() == "site"):
+            elif (getInput[0].lower() == "site"):
                 for site in sites:
                     print(site.url)
-            elif (getInput.lower() == "manga"):
+            elif (getInput[0].lower() == "manga"):
                 for manga in mangas:
                     print(manga.name)
+            elif (getInput[0].lower() == "help"):
+                pass
     except KeyboardInterrupt:
         exit(0)
 

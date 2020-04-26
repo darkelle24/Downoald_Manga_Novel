@@ -1,4 +1,4 @@
-from include.Site import Site, UrlType
+from include.Site import Site, UrlType, MangaType
 from typing import Tuple, List, Union, Dict
 from bs4 import BeautifulSoup
 from tools.getPage import getAPage
@@ -6,6 +6,7 @@ import os
 
 class isekaiscan(Site):
     url = "isekaiscan.com"
+    siteTypeManga = [MangaType.MANGA]
 
     def recupInfoManga(self, soup: BeautifulSoup, info: Dict[str, str])-> Dict[str, str]:
         name = soup.find("h3")
