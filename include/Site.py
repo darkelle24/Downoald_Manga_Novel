@@ -29,7 +29,7 @@ class Site:
     url: str
     siteTypeManga: List[MangaType] = []
 
-    def getInfoManga(self, url, soup = None)-> Dict[str, str]:
+    def __getInfoManga__(self, url, soup = None)-> Dict[str, str]:
         info = dict()
 
         if (soup == None):
@@ -46,7 +46,7 @@ class Site:
     def recupInfoManga(self, soup: BeautifulSoup, info: Dict[str, str])-> Dict[str, str]:
         return {}
 
-    def getOneChapter(self, url: str, path: str)-> List[Tuple[str, int, str, str]]:
+    def __getOneChapter__(self, url: str, path: str)-> List[Tuple[str, int, str, str]]:
         imageList: List[Tuple[str, int, str]]
 
         r = getAPage(url)
@@ -60,7 +60,7 @@ class Site:
     def recupOneChapter(self, soup: BeautifulSoup, path: str)->List[Tuple[str, int, int, str]]:
         return []
 
-    def getAllChapter(self, url: str) -> Union[List[Tuple[str, str]], BeautifulSoup]:
+    def __getAllChapter__(self, url: str) -> Union[List[Tuple[str, str]], BeautifulSoup]:
         list_chapter = []
 
         r = getAPage(url)
@@ -79,7 +79,7 @@ class Site:
     def getChapterNbrFromUrl(self, urlChapter: str)-> str:
         return urlChapter
 
-    def removeChapterAlreadyDownloadManga(self, chapterList:List[Tuple[str, str]], manga:Manga)->List[Tuple[str, str]] :
+    def __removeChapterAlreadyDownloadManga__(self, chapterList:List[Tuple[str, str]], manga:Manga)->List[Tuple[str, str]] :
         if (os.path.exists(manga.path)):
             listChapter = os.listdir(manga.path)
             for file in listChapter :
@@ -96,7 +96,7 @@ class Site:
             os.makedirs(manga.path, exist_ok=True)
             manga.save()
 
-    def removeChapterAlreadyDownloadNovel(self, chapterList:List[Tuple[str, str]], manga:Manga)->List[Tuple[str, str]] :
+    def __removeChapterAlreadyDownloadNovel__(self, chapterList:List[Tuple[str, str]], manga:Manga)->List[Tuple[str, str]] :
         if (os.path.exists(manga.path)):
             listChapter = os.listdir(manga.path)
             for file in listChapter :
@@ -110,7 +110,7 @@ class Site:
             os.makedirs(manga.path, exist_ok=True)
             manga.save()
 
-    def recupAllImageFromChapterUrl(self, urlChapterList:List[Tuple[str, str]])-> List[List[Tuple[str, int, str, str]]]:
+    def __recupAllImageFromChapterUrl__(self, urlChapterList:List[Tuple[str, str]])-> List[List[Tuple[str, int, str, str]]]:
         urlImages = []
         result = []
 
@@ -122,19 +122,19 @@ class Site:
         urlImages = sorted(urlImages, key = getChapterNbr)
         return urlImages
 
-    def downloadOneImage(self, oneImage: Tuple[str, int, int, str])-> bool:
+    def __downloadOneImage__(self, oneImage: Tuple[str, int, int, str])-> bool:
         returnValue = downloadImage(oneImage[3], oneImage[0])
         return returnValue
 
-    def progressBarAllInitManga(self, urlImages: List[List[Tuple[str, int, str, str]]], mangaName: str):
+    def __progressBarAllInitManga__(self, urlImages: List[List[Tuple[str, int, str, str]]], mangaName: str):
         with tqdm(total=len(urlImages), desc= mangaName, unit="ch", position=0, leave=True) as bar:
-            self.downloadAllImagesThread(urlImages, bar)
+            self.__downloadAllImagesThread__(urlImages, bar)
 
-    def downloadAllImagesThread(self, urlImages: List[List[Tuple[str, int, str, str]]], bar: tqdm = None):
+    def __downloadAllImagesThread__(self, urlImages: List[List[Tuple[str, int, str, str]]], bar: tqdm = None):
         errorChapter = []
         with concurrent.futures.ThreadPoolExecutor() as executor :
             for urlImagesOneChapter in urlImages :
-                futures_list = [executor.submit(self.downloadOneImage, image) for image in urlImagesOneChapter]
+                futures_list = [executor.submit(self.__downloadOneImage__, image) for image in urlImagesOneChapter]
                 for f in tqdm(concurrent.futures.as_completed(futures_list), total=len(futures_list), leave=False, desc= "    Chapter " + urlImagesOneChapter[0][2], unit="img"):
                     if (f.result() == False):
                         errorChapter.append(urlImagesOneChapter[0][2])
@@ -142,35 +142,35 @@ class Site:
                 if not (bar is None):
                     bar.update()
 
-    def progressBarAllInitNovel(self, urlChapter: List[Tuple[str, str]], mangaName: str):
+    def __progressBarAllInitNovel__(self, urlChapter: List[Tuple[str, str]], mangaName: str):
         with tqdm(total=len(urlChapter), desc= mangaName, unit="ch", position=0, leave=True) as bar:
-            self.downloadAllNovel(urlChapter, bar)
+            self.__downloadAllNovel__(urlChapter, bar)
 
     def getTextFromOneChapter(self, soupOneChapter: BeautifulSoup)->str:
         return ""
 
-    def getSoupFromNovel(self, urlOneChapter:str)->BeautifulSoup:
+    def __getSoupFromNovel__(self, urlOneChapter:str)->BeautifulSoup:
         r = getAPage(urlOneChapter)
         if (r == None):
             return None
         soup = BeautifulSoup(r.text, features="html.parser")
         return (soup)
 
-    def downoaldNovelOneChapter(self, urlOneChapter:Tuple[str, str]):
-        soup = self.getSoupFromNovel(urlOneChapter[0])
+    def __downoaldNovelOneChapter__(self, urlOneChapter:Tuple[str, str]):
+        soup = self.__getSoupFromNovel__(urlOneChapter[0])
         if (soup != None):
             text = self.getTextFromOneChapter(soup)
             os.makedirs(os.path.dirname(urlOneChapter[1]), exist_ok=True)
             with open(urlOneChapter[1], "w+", encoding="utf-8") as file:
                 file.write(text)
 
-    def downloadAllNovel(self, urlChapter: List[Tuple[str, str]], bar: tqdm = None):
+    def __downloadAllNovel__(self, urlChapter: List[Tuple[str, str]], bar: tqdm = None):
         for urlOneChapter in urlChapter :
-            self.downoaldNovelOneChapter(urlOneChapter)
+            self.__downoaldNovelOneChapter__(urlOneChapter)
             if not (bar is None):
                 bar.update()
 
-    def addPathToChpterList(self, urlChapterList:List[Tuple[str, str]], manga: Manga, mangatype: MangaType)->List[Tuple[str, str]]:
+    def __addPathToChpterList__(self, urlChapterList:List[Tuple[str, str]], manga: Manga, mangatype: MangaType)->List[Tuple[str, str]]:
         for index, oneChapter in enumerate(urlChapterList):
             if (mangatype == MangaType.MANGA):
                 urlChapterList[index] = (oneChapter[0], os.path.join(manga.path, "Manga", "Chapter " + remove(oneChapter[1].strip() ,'\/:*?"<>|')))
@@ -178,11 +178,11 @@ class Site:
                 urlChapterList[index] = (oneChapter[0], os.path.join(manga.path, "Novel", "Chapter " + remove(oneChapter[1].strip() ,'\/:*?"<>|') + ".txt"))
         return urlChapterList
 
-    def managerDownloader(self, urlChapterList:List[Tuple[str, str]], mangas:List[Manga], urlInfo:str, opts: List[str], mangatype: MangaType, soupInfo:BeautifulSoup = None):
+    def __managerDownloader__(self, urlChapterList:List[Tuple[str, str]], mangas:List[Manga], urlInfo:str, opts: List[str], mangatype: MangaType, soupInfo:BeautifulSoup = None):
         manga = None
         urlImages = []
 
-        info = self.getInfoManga(urlInfo, soupInfo)
+        info = self.__getInfoManga__(urlInfo, soupInfo)
         found = [x for x in mangas if x.name == info["name"]]
         if (found == []):
             path = os.path.join(".\\manga", info["name"])
@@ -192,32 +192,32 @@ class Site:
             mangas.append(manga)
         elif (len(found) == 1):
             if (mangatype == MangaType.MANGA):
-                urlChapterList = self.removeChapterAlreadyDownloadManga(urlChapterList, found[0])
+                urlChapterList = self.__removeChapterAlreadyDownloadManga__(urlChapterList, found[0])
             elif (mangatype == MangaType.NOVEL):
-                urlChapterList = self.removeChapterAlreadyDownloadNovel(urlChapterList, found[0])
+                urlChapterList = self.__removeChapterAlreadyDownloadNovel__(urlChapterList, found[0])
             manga = found[0]
         if (urlChapterList != []):
             if (mangatype == MangaType.MANGA):
-                self.managerDownloaderImage(urlChapterList, manga)
+                self.__managerDownloaderImage__(urlChapterList, manga)
             elif (mangatype == MangaType.NOVEL):
-                self.managerDownloaderText(urlChapterList, manga)
+                self.__managerDownloaderText__(urlChapterList, manga)
 
-    def managerDownloaderText(self, urlChapterList: List[Tuple[int, str]], manga: Manga):
-        urlChapterList = self.addPathToChpterList(urlChapterList, manga, MangaType.NOVEL)
+    def __managerDownloaderText__(self, urlChapterList: List[Tuple[int, str]], manga: Manga):
+        urlChapterList = self.__addPathToChpterList__(urlChapterList, manga, MangaType.NOVEL)
         urlChapterList.reverse()
-        self.progressBarAllInitNovel(urlChapterList, manga.name)
+        self.__progressBarAllInitNovel__(urlChapterList, manga.name)
 
-    def managerDownloaderImage(self, urlChapterList: List[Tuple[int, str]], manga: Manga):
-        urlChapterList = self.addPathToChpterList(urlChapterList, manga, MangaType.MANGA)
-        urlImages = self.recupAllImageFromChapterUrl(urlChapterList)
-        self.progressBarAllInitManga(urlImages, manga.name)
+    def __managerDownloaderImage__(self, urlChapterList: List[Tuple[int, str]], manga: Manga):
+        urlChapterList = self.__addPathToChpterList__(urlChapterList, manga, MangaType.MANGA)
+        urlImages = self.__recupAllImageFromChapterUrl__(urlChapterList)
+        self.__progressBarAllInitManga__(urlImages, manga.name)
 
     def getUrlInfoFromChapter(self, urlChapter: str)-> str :
         if (urlChapter[-1] == "/"):
             urlChapter = urlChapter[:-1]
         return urlChapter[:urlChapter.rfind("/")]
 
-    def getType(self, opts: List[str])->MangaType:
+    def __getType__(self, opts: List[str])->MangaType:
         if (self.siteTypeManga != []):
             for opt in opts:
                 if (opt == '-m' or opt == "--manga"):
@@ -239,15 +239,15 @@ class Site:
 
     def urlManager(self, url: str, opts: List[str], mangas: List[Manga], directory: str = "") :
         typeUrl = self.analyseURL(url)
-        typemanga = self.getType(opts)
+        typemanga = self.__getType__(opts)
         urlInfo = url
         soupInfo = None
         urlChapterList = []
 
         if (typeUrl != UrlType.NONE and typemanga != MangaType.NONE):
             if (typeUrl == UrlType.ALLCHAPTER) :
-                urlChapterList, soupInfo = self.getAllChapter(url)
+                urlChapterList, soupInfo = self.__getAllChapter(url)
             elif (typeUrl == UrlType.ONECHAPTER) :
                 urlInfo = self.getUrlInfoFromChapter(url)
                 urlChapterList = [(url, self.getChapterNbrFromUrl(url))]
-            self.managerDownloader(urlChapterList, mangas, urlInfo, opts, typemanga, soupInfo)
+            self.__managerDownloader__(urlChapterList, mangas, urlInfo, opts, typemanga, soupInfo)
