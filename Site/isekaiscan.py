@@ -43,7 +43,7 @@ class isekaiscan(Site):
     def getChapterNbrFromUrl(self, urlChapter: str)-> str:
         if (urlChapter[-1] == "/"):
             urlChapter = urlChapter[:-1]
-        return urlChapter[urlChapter.rfind("/"):].replace("chapter-", "").strip()
+        return urlChapter[urlChapter.rfind("/"):].replace("chapter-", "").replace("/", "").strip()
 
     def analyseURL(self, url:str)->UrlType :
         if (url[-1] == "/"):
