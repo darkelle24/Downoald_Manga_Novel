@@ -14,7 +14,7 @@ class Manga:
     sites: List[Tuple[str, str, str]]
     errorDownload: List[Tuple[int, int]]
 
-    def __init__(self, name: str = "", path:str = "", nbrChapter: int = 0, sites: List[Tuple[str, str, str]] = [], errorDownload: List[Tuple[int, int]] = []):
+    def __init__(self, name: str = "", path:str = "", nbrChapter: int = 0, sites: List[Tuple[str, str]] = [], errorDownload: List[Tuple[int, int]] = []):
         self.name = name
         self.path = path
         self.nbrChapter = nbrChapter
@@ -35,3 +35,9 @@ class Manga:
             path = self.path
         with open(os.path.join(path, ".info.json"), 'w+') as jsonFile:
             json.dump(self, jsonFile, indent=4, cls=MangaEncoder)
+
+    def checkRegisterSite(self, site: str)->bool:
+        for siteReg in sites:
+            if (siteReg[0] == site):
+                return True
+        return False

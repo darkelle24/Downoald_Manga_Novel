@@ -6,21 +6,12 @@ from include.Manga import Manga
 from typing import Tuple, List, Union, Dict
 from termcolor import colored
 from bs4 import BeautifulSoup
-from enum import Enum
 from tqdm import tqdm
 from itertools import repeat
+from tools.traductionModule import translateModule
+from include.Enum import UrlType, MangaType
 import concurrent.futures
 import os, shutil
-
-class UrlType(Enum):
-    ALLCHAPTER = 1
-    ONECHAPTER = 2
-    NONE = -1
-
-class MangaType(Enum):
-    NOVEL = 1
-    MANGA = 2
-    NONE = -1
 
 def getChapterNbr(elem: List[Tuple[str, int, int, str]]):
     return float(elem[0][2])
@@ -115,7 +106,7 @@ class Site:
         result = []
 
         with concurrent.futures.ThreadPoolExecutor() as executor :
-            result = [executor.submit(self.getOneChapter, oneChapter[0], oneChapter[1]) for oneChapter in urlChapterList]
+            result = [executor.submit(self.__getOneChapter__, oneChapter[0], oneChapter[1]) for oneChapter in urlChapterList]
 
             for f in tqdm(concurrent.futures.as_completed(result), total=len(result), leave=False, desc= "Retrieving image URLs", unit="ch"):
                 urlImages.append(f.result())
@@ -142,9 +133,9 @@ class Site:
                 if not (bar is None):
                     bar.update()
 
-    def __progressBarAllInitNovel__(self, urlChapter: List[Tuple[str, str]], mangaName: str):
+    def __progressBarAllInitNovel__(self, urlChapter: List[Tuple[str, str]], mangaName: str, opts: Dict):
         with tqdm(total=len(urlChapter), desc= mangaName, unit="ch", position=0, leave=True) as bar:
-            self.__downloadAllNovel__(urlChapter, bar)
+            self.__downloadAllNovel__(urlChapter, opts, bar)
 
     def getTextFromOneChapter(self, soupOneChapter: BeautifulSoup)->str:
         return ""
@@ -156,17 +147,19 @@ class Site:
         soup = BeautifulSoup(r.text, features="html.parser")
         return (soup)
 
-    def __downoaldNovelOneChapter__(self, urlOneChapter:Tuple[str, str]):
+    def __downoaldNovelOneChapter__(self, urlOneChapter:Tuple[str, str], opts: Dict):
         soup = self.__getSoupFromNovel__(urlOneChapter[0])
         if (soup != None):
             text = self.getTextFromOneChapter(soup)
             os.makedirs(os.path.dirname(urlOneChapter[1]), exist_ok=True)
             with open(urlOneChapter[1], "w+", encoding="utf-8") as file:
+                if ("trad" in opts):
+                    text = opts["trad"][0].translate(text, dest=opts["trad"][1], src="en").text
                 file.write(text)
 
-    def __downloadAllNovel__(self, urlChapter: List[Tuple[str, str]], bar: tqdm = None):
+    def __downloadAllNovel__(self, urlChapter: List[Tuple[str, str]], opts: Dict, bar: tqdm = None):
         for urlOneChapter in urlChapter :
-            self.__downoaldNovelOneChapter__(urlOneChapter)
+            self.__downoaldNovelOneChapter__(urlOneChapter, opts)
             if not (bar is None):
                 bar.update()
 
@@ -178,16 +171,17 @@ class Site:
                 urlChapterList[index] = (oneChapter[0], os.path.join(manga.path, "Novel", "Chapter " + remove(oneChapter[1].strip() ,'\/:*?"<>|') + ".txt"))
         return urlChapterList
 
-    def __managerDownloader__(self, urlChapterList:List[Tuple[str, str]], mangas:List[Manga], urlInfo:str, opts: List[str], mangatype: MangaType, soupInfo:BeautifulSoup = None):
+    def __managerDownloader__(self, urlChapterList:List[Tuple[str, str]], mangas:List[Manga], urlInfo:str, opts: Dict, mangatype: MangaType, soupInfo:BeautifulSoup = None):
         manga = None
         urlImages = []
 
         info = self.__getInfoManga__(urlInfo, soupInfo)
+        correctNamePath = remove(info["name"].strip() ,'\/:*?"<>|')
         found = [x for x in mangas if x.name == info["name"]]
         if (found == []):
-            path = os.path.join(".\\manga", info["name"])
+            path = os.path.join(".\\manga", correctNamePath)
             os.makedirs(path, exist_ok=True)
-            manga = Manga(info["name"], path)
+            manga = Manga(info["name"], path, 0, [(self.url, urlInfo)])
             manga.save()
             mangas.append(manga)
         elif (len(found) == 1):
@@ -196,18 +190,20 @@ class Site:
             elif (mangatype == MangaType.NOVEL):
                 urlChapterList = self.__removeChapterAlreadyDownloadNovel__(urlChapterList, found[0])
             manga = found[0]
+            if (manga.checkRegisterSite(self.url) == False):
+                manga.sites = manga.sites +  [(self.url, urlInfo)]
         if (urlChapterList != []):
             if (mangatype == MangaType.MANGA):
-                self.__managerDownloaderImage__(urlChapterList, manga)
+                self.__managerDownloaderImage__(urlChapterList, manga, opts)
             elif (mangatype == MangaType.NOVEL):
-                self.__managerDownloaderText__(urlChapterList, manga)
+                self.__managerDownloaderText__(urlChapterList, manga, opts)
 
-    def __managerDownloaderText__(self, urlChapterList: List[Tuple[int, str]], manga: Manga):
+    def __managerDownloaderText__(self, urlChapterList: List[Tuple[int, str]], manga: Manga, opts: Dict):
         urlChapterList = self.__addPathToChpterList__(urlChapterList, manga, MangaType.NOVEL)
         urlChapterList.reverse()
-        self.__progressBarAllInitNovel__(urlChapterList, manga.name)
+        self.__progressBarAllInitNovel__(urlChapterList, manga.name, opts)
 
-    def __managerDownloaderImage__(self, urlChapterList: List[Tuple[int, str]], manga: Manga):
+    def __managerDownloaderImage__(self, urlChapterList: List[Tuple[int, str]], manga: Manga, opts: Dict):
         urlChapterList = self.__addPathToChpterList__(urlChapterList, manga, MangaType.MANGA)
         urlImages = self.__recupAllImageFromChapterUrl__(urlChapterList)
         self.__progressBarAllInitManga__(urlImages, manga.name)
@@ -237,6 +233,12 @@ class Site:
             print("This site doesn’t have any type of manga")
             return MangaType.NONE
 
+    def __gestOpt__(self, opts: List[str], typeUrl:UrlType, mangatype: MangaType)-> Dict:
+        dictio = {}
+
+        dictio = translateModule(dictio, opts, mangatype)
+        return (dictio)
+
     def urlManager(self, url: str, opts: List[str], mangas: List[Manga], directory: str = "") :
         typeUrl = self.analyseURL(url)
         typemanga = self.__getType__(opts)
@@ -245,8 +247,9 @@ class Site:
         urlChapterList = []
 
         if (typeUrl != UrlType.NONE and typemanga != MangaType.NONE):
+            opts = self.__gestOpt__(opts, typeUrl, typemanga)
             if (typeUrl == UrlType.ALLCHAPTER) :
-                urlChapterList, soupInfo = self.__getAllChapter(url)
+                urlChapterList, soupInfo = self.__getAllChapter__(url)
             elif (typeUrl == UrlType.ONECHAPTER) :
                 urlInfo = self.getUrlInfoFromChapter(url)
                 urlChapterList = [(url, self.getChapterNbrFromUrl(url))]

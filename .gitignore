@@ -133,3 +133,5 @@ manga/
 .vscode/settings.json
 .vscode/
 test.py
+
+manga
