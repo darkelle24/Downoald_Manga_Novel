@@ -228,7 +228,11 @@ class Site:
                     else:
                         print("This site doesn’t accept this type of manga")
                         return MangaType.NONE
-            return MangaType.MANGA
+            if (MangaType.MANGA in self.siteTypeManga):
+                return MangaType.MANGA
+            else:
+                print("This site doesn’t accept this type of manga")
+                return MangaType.NONE
         else:
             print("This site doesn’t have any type of manga")
             return MangaType.NONE
