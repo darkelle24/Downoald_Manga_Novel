@@ -37,7 +37,7 @@ class Manga:
             json.dump(self, jsonFile, indent=4, cls=MangaEncoder)
 
     def checkRegisterSite(self, site: str)->bool:
-        for siteReg in sites:
+        for siteReg in self.sites:
             if (siteReg[0] == site):
                 return True
         return False
