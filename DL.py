@@ -55,10 +55,10 @@ def main():
             elif (getInput[0] == "help"):
                 pass
             elif (getInput[0] == "setupdate"):
-                update = setUpdateWithUrl(getInput, directory, sites, mangas, updates)
+                update = setUpdateWithUrl(getInput, sites, updates)
             elif (getInput[0] == "updatelist"):
                 for update in updates:
-                    print("\t" + update.url + "  " + update.path + "  " + str(update.last_chapter))
+                    print("\t" + update.__str__())
     except KeyboardInterrupt:
         exit(0)
 

@@ -1,6 +1,5 @@
 import os
 import json
-import os
 from typing import List
 from include.Update import Update
 
@@ -13,6 +12,6 @@ def loadUpdate()->List[Update]:
             for update in data:
                 url = update["url"]
                 last_chapter = update["last_chapter"]
-                if (url != "" and last_chapter != ""):
-                    listUpdate.append(Update(url, float(last_chapter)))
+                if (url != None and last_chapter != None):
+                    listUpdate.append(Update(url, last_chapter))
     return listUpdate
