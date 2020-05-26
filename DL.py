@@ -6,7 +6,7 @@ from include.Site import Site
 from tools.loadAllSite import loadAllSite
 from tools.loadAllManga import loadAllManga
 from tools.loadUpdate import loadUpdate
-from include.Update import setUpdateWithUrl
+from include.Update import setUpdateWithUrl, getUpdate
 from tools.findSiteWithUrl import findSiteWithUrl
 
 def downloadWithUrl(opts, directory, sites, mangas):
@@ -29,6 +29,14 @@ def downloadWithUrl(opts, directory, sites, mangas):
 ##    func = switcher.get(cmd,lambda :'Invalid')
 ##    return func()
 
+def init():
+    os.system('color')
+    sites = loadAllSite()
+    mangas = loadAllManga()
+    updates = loadUpdate(sites)
+
+    return (sites, mangas, updates)
+
 def main():
     getInput = []
     directory = ""
@@ -36,10 +44,7 @@ def main():
     mangas = []
     updates = []
 
-    os.system('color')
-    sites = loadAllSite()
-    mangas = loadAllManga()
-    updates = loadUpdate()
+    sites, mangas, updates = init()
     try:
         while (getInput == [] or getInput[0].lower() != "stop"):
             getInput = input(">>> ").split(" ")
@@ -55,10 +60,15 @@ def main():
             elif (getInput[0] == "help"):
                 pass
             elif (getInput[0] == "setupdate"):
-                update = setUpdateWithUrl(getInput, sites, updates)
+                updates = setUpdateWithUrl(getInput, sites, updates)
             elif (getInput[0] == "updatelist"):
                 for update in updates:
                     print("\t" + update.__str__())
+            elif (getInput[0] == "update"):
+                getUpdate(updates, mangas)
+            elif (getInput[0] == "reload"):
+                directory = ""
+                sites, mangas, updates = init()
     except KeyboardInterrupt:
         exit(0)
 

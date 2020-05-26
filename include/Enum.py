@@ -5,7 +5,7 @@ class UrlType(Enum):
     ONECHAPTER = 2
     NONE = -1
 
-class MangaType(Enum):
+class MangaType(int, Enum):
     NOVEL = 1
     MANGA = 2
     NONE = -1
