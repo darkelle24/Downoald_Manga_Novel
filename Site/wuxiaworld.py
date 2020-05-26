@@ -26,7 +26,10 @@ class wuxiaworld(Site):
             chapter = temp
         for textget in chapter.find_all('p'):
             if (textget.string != None):
-                text = text + textget.string + "\n\n"
+                if (textget.string != "\n"):
+                    text = text + textget.string + "\n\n"
+                else:
+                    text = text + textget.string
         return (text)
 
     def recupAllChapter(self, soup: BeautifulSoup) -> List[Tuple[str, str]]:

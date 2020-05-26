@@ -84,34 +84,38 @@ class Site:
         return (list_chapter, soup)
 
     def __removeChapterAlreadyDownloadManga__(self, chapterList:List[Tuple[str, str]], manga:Manga)->List[Tuple[str, str]] :
-        if (os.path.exists(manga.path)):
-            listChapter = os.listdir(manga.path)
+        path = os.path.join(manga.path, "Manga")
+
+        if (os.path.exists(path)):
+            listChapter = os.listdir(path)
             for file in listChapter :
                 chapterNbr = file.replace("Chapter ", "")
-                if (file != ".info.json" and os.path.isfile(os.path.join(manga.path, file, ".info.json")) == True):
+                if (file != ".info.json" and os.path.isfile(os.path.join(path, file, ".info.json")) == True):
                     for i, oneChapterTuple in enumerate(chapterList):
                         if (oneChapterTuple[1] == chapterNbr):
                             chapterList.pop(i)
                             break
                 elif (file != ".info.json"):
-                    shutil.rmtree(os.path.join(manga.path, file))
+                    shutil.rmtree(os.path.join(path, file))
             return chapterList
         else:
-            os.makedirs(manga.path, exist_ok=True)
+            os.makedirs(path, exist_ok=True)
             manga.save()
 
     def __removeChapterAlreadyDownloadNovel__(self, chapterList:List[Tuple[str, str]], manga:Manga)->List[Tuple[str, str]] :
-        if (os.path.exists(manga.path)):
-            listChapter = os.listdir(manga.path)
+        path = os.path.join(manga.path, "Novel")
+
+        if (os.path.exists(path)):
+            listChapter = os.listdir(path)
             for file in listChapter :
-                chapterNbr = file.replace("Chapter ", "")
+                chapterNbr = file.replace("Chapter ", "").replace(".txt", "")
                 for i, oneChapterTuple in enumerate(chapterList):
                     if (oneChapterTuple[1] == chapterNbr):
                         chapterList.pop(i)
                         break
             return chapterList
         else:
-            os.makedirs(manga.path, exist_ok=True)
+            os.makedirs(path, exist_ok=True)
             manga.save()
 
     def __recupAllImageFromChapterUrl__(self, urlChapterList:List[Tuple[str, str]])-> List[List[Tuple[str, int, str, str]]]:
