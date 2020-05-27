@@ -1,0 +1,971 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.8.1" />
+<title>include.Site API documentation</title>
+<meta name="description" content="" />
+<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>include.Site</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">from tools.Other.downloadImage import downloadImage
+from tools.Other.SiteMetaData import chapterInfo
+from tools.Other.getPage import getAPage
+from tools.Other.remove import remove
+from include.Manga import Manga
+from typing import Tuple, List, Union, Dict
+from termcolor import colored
+from bs4 import BeautifulSoup
+from tqdm import tqdm
+from tools.Opt.NovelOpt.traductionModule import translateModule
+from include.Enum import UrlType, MangaType
+import concurrent.futures
+import os, shutil
+from tools.Opt.UpdateOpt.NotificationOpt import basicNotif, notificationOpt
+
+def __getChapterNbr__(elem: List[Tuple[str, int, int, str]]):
+    return float(elem[0][2])
+
+class Site:
+    url: str
+    siteTypeManga: List[MangaType] = []
+
+
+
+
+    def recupInfoManga(self, soup: BeautifulSoup)-&gt; Dict[str, str]:
+        &#34;&#34;&#34;Retrieve the manga informations. Name is required
+
+        Args:
+            soup (BeautifulSoup): Have HTML code of the web page in form of BeautifulSoup
+
+        Returns:
+            Dict[str, str]: Return a dictionary containing information about the manga. Name is required
+        &#34;&#34;&#34;
+        return {}
+
+    def recupAllChapter(self, soup: BeautifulSoup) -&gt; List[Tuple[str, str]]:
+        &#34;&#34;&#34;Retrieve all chapter from the UrlType.ALLCHAPTER
+
+        Args:
+            soup (BeautifulSoup): Have HTML code of the web page in form of BeautifulSoup
+
+        Returns:
+            List[Tuple[str, str]]: Returns a tuple list containing the chapter url and the chapter number (+ chapter title, optional)
+        &#34;&#34;&#34;
+        return []
+
+    def analyseURL(self, url:str)-&gt;UrlType :
+        &#34;&#34;&#34;Lets you know from the url of a page if it is a page with all the chapters (UrlType.ALLCHAPTER) or just a chapter (UrlType.ONECHAPTER)
+
+        Args:
+            url (str): URL to analyze
+
+        Returns:
+            UrlType: Returns the type of the page either UrlType.ALLCHAPTER or UrlType.ONECHAPTER
+        &#34;&#34;&#34;
+        return UrlType.NONE
+
+    def getChapterNbrFromUrl(self, urlChapter: str)-&gt; str:
+        &#34;&#34;&#34;Allows you to know the chapter number from the url
+
+        Args:
+            urlChapter (str): URL to analyze
+
+        Returns:
+            str: Returns the number of the chapter
+        &#34;&#34;&#34;
+        return urlChapter
+
+    def getTextFromOneChapter(self, soupOneChapter: BeautifulSoup)-&gt;str:
+        &#34;&#34;&#34;Allows you to recover the text of this chapter of a novel
+
+        Args:
+            soupOneChapter (BeautifulSoup): Have HTML code of the web page in form of BeautifulSoup
+
+        Returns:
+            str: Return the text of this chapter of the novel
+        &#34;&#34;&#34;
+        return &#34;&#34;
+
+    def getImageFromOneChapter(self, soup: BeautifulSoup, path: str)-&gt;List[Tuple[str, int, int, str]]:
+        &#34;&#34;&#34;Used to retrieve information from the images in this chapter
+
+        Args:
+            soup (BeautifulSoup): Have HTML code of the web page in form of BeautifulSoup
+            path (str): Have the path to save the image of this chapter
+
+        Returns:
+            List[Tuple[str, int, int, str]]: Returns a tuple list containing information about the images in this chapter [ Url to download the image, Number of this image, Number of this chapter, Path of this image ]
+        &#34;&#34;&#34;
+        return []
+
+    def getUrlInfoFromChapter(self, urlChapter: str)-&gt; str :
+        &#34;&#34;&#34;Allows to recover from the URL the URL of the web page containing all the chapters
+
+        Args:
+            urlChapter (str): URL to analyze
+
+        Returns:
+            str: URL of the web page containing all the chapter
+        &#34;&#34;&#34;
+        if (urlChapter[-1] == &#34;/&#34;):
+            urlChapter = urlChapter[:-1]
+        return urlChapter[:urlChapter.rfind(&#34;/&#34;)]
+
+
+
+
+    def __getInfoManga__(self, url, soup = None)-&gt; Dict[str, str]:
+        if (soup == None):
+            r = getAPage(url)
+            if (r == None):
+                print(colored((&#34;Problem Info Page&#34;, &#34;red&#34;)))
+                return &#34;ERROR&#34;, -1, (&#34;&#34;,&#34;&#34;,&#34;&#34;)
+            soup = BeautifulSoup(r.text, features=&#34;html.parser&#34;)
+        info = self.recupInfoManga(soup)
+        info[&#34;urlSite&#34;] = self.url
+        info[&#34;urlInfo&#34;] = url
+        return (info)
+
+    def __getOneChapterManga__(self, url: str, path: str)-&gt; List[Tuple[str, int, str, str]]:
+        imageList: List[Tuple[str, int, str]]
+
+        r = getAPage(url)
+        if (r == None):
+            print(colored((&#34;Problem Page for this URL: &#34; + url, &#34;red&#34;)))
+            return (None)
+        soup = BeautifulSoup(r.text, features=&#34;html.parser&#34;)
+        imageList = self.getImageFromOneChapter(soup, path)
+        return imageList
+
+    def __getAllChapter__(self, url: str) -&gt; Union[List[Tuple[str, str]], BeautifulSoup]:
+        list_chapter = []
+
+        r = getAPage(url)
+        if (r == None):
+            return None
+        soup = BeautifulSoup(r.text, features=&#34;html.parser&#34;)
+        list_chapter = self.recupAllChapter(soup)
+        return (list_chapter, soup)
+
+    def __removeChapterAlreadyDownloadManga__(self, chapterList:List[Tuple[str, str]], manga:Manga)-&gt;List[Tuple[str, str]] :
+        path = os.path.join(manga.path, &#34;Manga&#34;)
+
+        if (os.path.exists(path)):
+            listChapter = os.listdir(path)
+            for file in listChapter :
+                chapterNbr = file.replace(&#34;Chapter &#34;, &#34;&#34;)
+                if (file != &#34;.info.json&#34; and os.path.isfile(os.path.join(path, file, &#34;.info.json&#34;)) == True):
+                    for i, oneChapterTuple in enumerate(chapterList):
+                        if (oneChapterTuple[1] == chapterNbr):
+                            chapterList.pop(i)
+                            break
+                elif (file != &#34;.info.json&#34;):
+                    shutil.rmtree(os.path.join(path, file))
+            return chapterList
+        else:
+            os.makedirs(path, exist_ok=True)
+            manga.save()
+
+    def __removeChapterAlreadyDownloadNovel__(self, chapterList:List[Tuple[str, str]], manga:Manga)-&gt;List[Tuple[str, str]] :
+        path = os.path.join(manga.path, &#34;Novel&#34;)
+
+        if (os.path.exists(path)):
+            listChapter = os.listdir(path)
+            for file in listChapter :
+                chapterNbr = file.replace(&#34;Chapter &#34;, &#34;&#34;).replace(&#34;.txt&#34;, &#34;&#34;)
+                for i, oneChapterTuple in enumerate(chapterList):
+                    if (oneChapterTuple[1] == chapterNbr):
+                        chapterList.pop(i)
+                        break
+            return chapterList
+        else:
+            os.makedirs(path, exist_ok=True)
+            manga.save()
+
+    def __recupAllImageFromChapterUrl__(self, urlChapterList:List[Tuple[str, str]])-&gt; List[List[Tuple[str, int, str, str]]]:
+        urlImages = []
+        result = []
+
+        with concurrent.futures.ThreadPoolExecutor() as executor :
+            result = [executor.submit(self.__getOneChapterManga__, oneChapter[0], oneChapter[1]) for oneChapter in urlChapterList]
+
+            for f in tqdm(concurrent.futures.as_completed(result), total=len(result), leave=False, desc= &#34;    Retrieving image URLs&#34;, unit=&#34;ch&#34;):
+                urlImages.append(f.result())
+        urlImages = sorted(urlImages, key = __getChapterNbr__)
+        return urlImages
+
+    def __downloadOneImage__(self, oneImage: Tuple[str, int, int, str])-&gt; bool:
+        returnValue = downloadImage(oneImage[3], oneImage[0])
+        return returnValue
+
+    def __progressBarAllInitManga__(self, urlImages: List[List[Tuple[str, int, str, str]]], mangaName: str):
+        with tqdm(total=len(urlImages), desc= &#34;    &#34; + mangaName, unit=&#34;ch&#34;, position=0, leave=True) as bar:
+            self.__downloadAllImagesThread__(urlImages, bar)
+
+    def __downloadAllImagesThread__(self, urlImages: List[List[Tuple[str, int, str, str]]], bar: tqdm = None):
+        errorChapter = []
+        with concurrent.futures.ThreadPoolExecutor() as executor :
+            for urlImagesOneChapter in urlImages :
+                futures_list = [executor.submit(self.__downloadOneImage__, image) for image in urlImagesOneChapter]
+                for f in tqdm(concurrent.futures.as_completed(futures_list), total=len(futures_list), leave=False, desc= &#34;        Chapter &#34; + urlImagesOneChapter[0][2], unit=&#34;img&#34;):
+                    if (f.result() == False):
+                        errorChapter.append(urlImagesOneChapter[0][2])
+                chapterInfo(len(urlImagesOneChapter), self.url, urlImagesOneChapter[0][3][:urlImagesOneChapter[0][3].rfind(&#34;\\&#34;)])
+                if not (bar is None):
+                    bar.update()
+
+    def __progressBarAllInitNovel__(self, urlChapter: List[Tuple[str, str]], mangaName: str, opts: Dict):
+        with tqdm(total=len(urlChapter), desc= &#34;    &#34; + mangaName, unit=&#34;ch&#34;, position=0, leave=True) as bar:
+            self.__downloadAllNovel__(urlChapter, opts, bar)
+
+    def __getSoupFromNovel__(self, urlOneChapter:str)-&gt;BeautifulSoup:
+        r = getAPage(urlOneChapter)
+        if (r == None):
+            return None
+        soup = BeautifulSoup(r.text, features=&#34;html.parser&#34;)
+        return (soup)
+
+    def __downoaldNovelOneChapter__(self, urlOneChapter:Tuple[str, str], opts: Dict):
+        soup = self.__getSoupFromNovel__(urlOneChapter[0])
+        if (soup != None):
+            text = self.getTextFromOneChapter(soup)
+            os.makedirs(os.path.dirname(urlOneChapter[1]), exist_ok=True)
+            with open(urlOneChapter[1], &#34;w+&#34;, encoding=&#34;utf-8&#34;) as file:
+                if (&#34;trad&#34; in opts):
+                    text = opts[&#34;trad&#34;][0].translate(text, dest=opts[&#34;trad&#34;][1], src=&#34;en&#34;).text
+                file.write(text)
+
+    def __downloadAllNovel__(self, urlChapter: List[Tuple[str, str]], opts: Dict, bar: tqdm = None):
+        for urlOneChapter in urlChapter :
+            self.__downoaldNovelOneChapter__(urlOneChapter, opts)
+            if not (bar is None):
+                bar.update()
+
+    def __addPathToChpterList__(self, urlChapterList:List[Tuple[str, str]], manga: Manga, mangatype: MangaType)-&gt;List[Tuple[str, str]]:
+        for index, oneChapter in enumerate(urlChapterList):
+            if (mangatype == MangaType.MANGA):
+                urlChapterList[index] = (oneChapter[0], os.path.join(manga.path, &#34;Manga&#34;, &#34;Chapter &#34; + remove(oneChapter[1].strip() ,&#39;\\/:*?&#34;&lt;&gt;|&#39;)))
+            elif (mangatype == MangaType.NOVEL):
+                urlChapterList[index] = (oneChapter[0], os.path.join(manga.path, &#34;Novel&#34;, &#34;Chapter &#34; + remove(oneChapter[1].strip() ,&#39;\\/:*?&#34;&lt;&gt;|&#39;) + &#34;.txt&#34;))
+        return urlChapterList
+
+    def __createNewManga__(self, info: Dict[str, str], urlInfo: str, mangas: List[Manga])-&gt;List[Manga]:
+        correctNamePath = remove(info[&#34;name&#34;].strip() ,&#39;\\/:*?&#34;&lt;&gt;|&#39;)
+        path = os.path.join(&#34;.\\manga&#34;, correctNamePath)
+        os.makedirs(path, exist_ok=True)
+        manga = Manga(info[&#34;name&#34;], path, 0, [(self.url, urlInfo)])
+        manga.save()
+        mangas.append(manga)
+        return (mangas)
+
+    def __managerDownloader__(self, urlChapterList:List[Tuple[str, str]], mangas:List[Manga], urlInfo:str, opts: Dict, mangatype: MangaType, soupInfo:BeautifulSoup = None):
+        manga = None
+        urlImages = []
+
+        info = self.__getInfoManga__(urlInfo, soupInfo)
+        found = [x for x in mangas if x.name == info[&#34;name&#34;]]
+        if (found == []):
+            mangas = self.__createNewManga__(info, urlInfo, mangas)
+            manga = mangas[-1]
+        elif (len(found) == 1):
+            if (mangatype == MangaType.MANGA):
+                urlChapterList = self.__removeChapterAlreadyDownloadManga__(urlChapterList, found[0])
+            elif (mangatype == MangaType.NOVEL):
+                urlChapterList = self.__removeChapterAlreadyDownloadNovel__(urlChapterList, found[0])
+            manga = found[0]
+            if (manga.checkRegisterSite(self.url) == False):
+                manga.sites = manga.sites +  [(self.url, urlInfo)]
+        if (urlChapterList != None and urlChapterList != []):
+            if (mangatype == MangaType.MANGA):
+                self.__managerDownloaderImage__(urlChapterList, manga, opts)
+            elif (mangatype == MangaType.NOVEL):
+                self.__managerDownloaderText__(urlChapterList, manga, opts)
+            if (&#34;notification&#34; in opts):
+                basicNotif(opts[&#34;notification&#34;], manga.name, len(urlChapterList), mangatype)
+
+    def __managerDownloaderText__(self, urlChapterList: List[Tuple[int, str]], manga: Manga, opts: Dict):
+        urlChapterList = self.__addPathToChpterList__(urlChapterList, manga, MangaType.NOVEL)
+        urlChapterList.reverse()
+        self.__progressBarAllInitNovel__(urlChapterList, manga.name, opts)
+
+    def __managerDownloaderImage__(self, urlChapterList: List[Tuple[int, str]], manga: Manga, opts: Dict):
+        urlChapterList = self.__addPathToChpterList__(urlChapterList, manga, MangaType.MANGA)
+        urlImages = self.__recupAllImageFromChapterUrl__(urlChapterList)
+        self.__progressBarAllInitManga__(urlImages, manga.name)
+
+    def __getType__(self, opts: str)-&gt;MangaType:
+        if (self.siteTypeManga != []):
+            for opt in opts:
+                if (opt == &#39;-m&#39; or opt == &#34;--manga&#34;):
+                    if (MangaType.MANGA in self.siteTypeManga):
+                        return MangaType.MANGA
+                    else:
+                        print(&#34;This site doesn’t accept this type of manga&#34;)
+                        return MangaType.NONE
+                if (opt == &#39;-n&#39; or opt == &#34;--novel&#34;):
+                    if (MangaType.NOVEL in self.siteTypeManga):
+                        return MangaType.NOVEL
+                    else:
+                        print(&#34;This site doesn’t accept this type of manga&#34;)
+                        return MangaType.NONE
+            if (len(self.siteTypeManga) == 1):
+                return self.siteTypeManga[0]
+            else:
+                print(&#34;You need to precise what type of manga you want with the option: \&#34;-m\&#34; or \&#34;-n\&#34;&#34;)
+                return MangaType.NONE
+        else:
+            print(&#34;This site doesn’t have any type of manga&#34;)
+            return MangaType.NONE
+
+    def __gestOpt__(self, opts: List[str], typeUrl:UrlType, mangatype: MangaType)-&gt; Dict:
+        dictio = {}
+
+        for opt in opts :
+            dictio = translateModule(dictio, opt, mangatype)
+            dictio = notificationOpt(dictio, opt)
+        return (dictio)
+
+    def __urlManager__(self, url: str, opts: List[str], mangas: List[Manga], directory: str = &#34;&#34;) :
+        typeUrl = self.analyseURL(url)
+        typemanga = self.__getType__(opts)
+        urlInfo = url
+        soupInfo = None
+        urlChapterList = []
+
+        if (typeUrl != UrlType.NONE and typemanga != MangaType.NONE):
+            opts = self.__gestOpt__(opts, typeUrl, typemanga)
+            if (typeUrl == UrlType.ALLCHAPTER) :
+                urlChapterList, soupInfo = self.__getAllChapter__(url)
+            elif (typeUrl == UrlType.ONECHAPTER) :
+                urlInfo = self.getUrlInfoFromChapter(url)
+                urlChapterList = [(url, self.getChapterNbrFromUrl(url))]
+            self.__managerDownloader__(urlChapterList, mangas, urlInfo, opts, typemanga, soupInfo)</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="include.Site.Site"><code class="flex name class">
+<span>class <span class="ident">Site</span></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Site:
+    url: str
+    siteTypeManga: List[MangaType] = []
+
+
+
+
+    def recupInfoManga(self, soup: BeautifulSoup)-&gt; Dict[str, str]:
+        &#34;&#34;&#34;Retrieve the manga informations. Name is required
+
+        Args:
+            soup (BeautifulSoup): Have HTML code of the web page in form of BeautifulSoup
+
+        Returns:
+            Dict[str, str]: Return a dictionary containing information about the manga. Name is required
+        &#34;&#34;&#34;
+        return {}
+
+    def recupAllChapter(self, soup: BeautifulSoup) -&gt; List[Tuple[str, str]]:
+        &#34;&#34;&#34;Retrieve all chapter from the UrlType.ALLCHAPTER
+
+        Args:
+            soup (BeautifulSoup): Have HTML code of the web page in form of BeautifulSoup
+
+        Returns:
+            List[Tuple[str, str]]: Returns a tuple list containing the chapter url and the chapter number (+ chapter title, optional)
+        &#34;&#34;&#34;
+        return []
+
+    def analyseURL(self, url:str)-&gt;UrlType :
+        &#34;&#34;&#34;Lets you know from the url of a page if it is a page with all the chapters (UrlType.ALLCHAPTER) or just a chapter (UrlType.ONECHAPTER)
+
+        Args:
+            url (str): URL to analyze
+
+        Returns:
+            UrlType: Returns the type of the page either UrlType.ALLCHAPTER or UrlType.ONECHAPTER
+        &#34;&#34;&#34;
+        return UrlType.NONE
+
+    def getChapterNbrFromUrl(self, urlChapter: str)-&gt; str:
+        &#34;&#34;&#34;Allows you to know the chapter number from the url
+
+        Args:
+            urlChapter (str): URL to analyze
+
+        Returns:
+            str: Returns the number of the chapter
+        &#34;&#34;&#34;
+        return urlChapter
+
+    def getTextFromOneChapter(self, soupOneChapter: BeautifulSoup)-&gt;str:
+        &#34;&#34;&#34;Allows you to recover the text of this chapter of a novel
+
+        Args:
+            soupOneChapter (BeautifulSoup): Have HTML code of the web page in form of BeautifulSoup
+
+        Returns:
+            str: Return the text of this chapter of the novel
+        &#34;&#34;&#34;
+        return &#34;&#34;
+
+    def getImageFromOneChapter(self, soup: BeautifulSoup, path: str)-&gt;List[Tuple[str, int, int, str]]:
+        &#34;&#34;&#34;Used to retrieve information from the images in this chapter
+
+        Args:
+            soup (BeautifulSoup): Have HTML code of the web page in form of BeautifulSoup
+            path (str): Have the path to save the image of this chapter
+
+        Returns:
+            List[Tuple[str, int, int, str]]: Returns a tuple list containing information about the images in this chapter [ Url to download the image, Number of this image, Number of this chapter, Path of this image ]
+        &#34;&#34;&#34;
+        return []
+
+    def getUrlInfoFromChapter(self, urlChapter: str)-&gt; str :
+        &#34;&#34;&#34;Allows to recover from the URL the URL of the web page containing all the chapters
+
+        Args:
+            urlChapter (str): URL to analyze
+
+        Returns:
+            str: URL of the web page containing all the chapter
+        &#34;&#34;&#34;
+        if (urlChapter[-1] == &#34;/&#34;):
+            urlChapter = urlChapter[:-1]
+        return urlChapter[:urlChapter.rfind(&#34;/&#34;)]
+
+
+
+
+    def __getInfoManga__(self, url, soup = None)-&gt; Dict[str, str]:
+        if (soup == None):
+            r = getAPage(url)
+            if (r == None):
+                print(colored((&#34;Problem Info Page&#34;, &#34;red&#34;)))
+                return &#34;ERROR&#34;, -1, (&#34;&#34;,&#34;&#34;,&#34;&#34;)
+            soup = BeautifulSoup(r.text, features=&#34;html.parser&#34;)
+        info = self.recupInfoManga(soup)
+        info[&#34;urlSite&#34;] = self.url
+        info[&#34;urlInfo&#34;] = url
+        return (info)
+
+    def __getOneChapterManga__(self, url: str, path: str)-&gt; List[Tuple[str, int, str, str]]:
+        imageList: List[Tuple[str, int, str]]
+
+        r = getAPage(url)
+        if (r == None):
+            print(colored((&#34;Problem Page for this URL: &#34; + url, &#34;red&#34;)))
+            return (None)
+        soup = BeautifulSoup(r.text, features=&#34;html.parser&#34;)
+        imageList = self.getImageFromOneChapter(soup, path)
+        return imageList
+
+    def __getAllChapter__(self, url: str) -&gt; Union[List[Tuple[str, str]], BeautifulSoup]:
+        list_chapter = []
+
+        r = getAPage(url)
+        if (r == None):
+            return None
+        soup = BeautifulSoup(r.text, features=&#34;html.parser&#34;)
+        list_chapter = self.recupAllChapter(soup)
+        return (list_chapter, soup)
+
+    def __removeChapterAlreadyDownloadManga__(self, chapterList:List[Tuple[str, str]], manga:Manga)-&gt;List[Tuple[str, str]] :
+        path = os.path.join(manga.path, &#34;Manga&#34;)
+
+        if (os.path.exists(path)):
+            listChapter = os.listdir(path)
+            for file in listChapter :
+                chapterNbr = file.replace(&#34;Chapter &#34;, &#34;&#34;)
+                if (file != &#34;.info.json&#34; and os.path.isfile(os.path.join(path, file, &#34;.info.json&#34;)) == True):
+                    for i, oneChapterTuple in enumerate(chapterList):
+                        if (oneChapterTuple[1] == chapterNbr):
+                            chapterList.pop(i)
+                            break
+                elif (file != &#34;.info.json&#34;):
+                    shutil.rmtree(os.path.join(path, file))
+            return chapterList
+        else:
+            os.makedirs(path, exist_ok=True)
+            manga.save()
+
+    def __removeChapterAlreadyDownloadNovel__(self, chapterList:List[Tuple[str, str]], manga:Manga)-&gt;List[Tuple[str, str]] :
+        path = os.path.join(manga.path, &#34;Novel&#34;)
+
+        if (os.path.exists(path)):
+            listChapter = os.listdir(path)
+            for file in listChapter :
+                chapterNbr = file.replace(&#34;Chapter &#34;, &#34;&#34;).replace(&#34;.txt&#34;, &#34;&#34;)
+                for i, oneChapterTuple in enumerate(chapterList):
+                    if (oneChapterTuple[1] == chapterNbr):
+                        chapterList.pop(i)
+                        break
+            return chapterList
+        else:
+            os.makedirs(path, exist_ok=True)
+            manga.save()
+
+    def __recupAllImageFromChapterUrl__(self, urlChapterList:List[Tuple[str, str]])-&gt; List[List[Tuple[str, int, str, str]]]:
+        urlImages = []
+        result = []
+
+        with concurrent.futures.ThreadPoolExecutor() as executor :
+            result = [executor.submit(self.__getOneChapterManga__, oneChapter[0], oneChapter[1]) for oneChapter in urlChapterList]
+
+            for f in tqdm(concurrent.futures.as_completed(result), total=len(result), leave=False, desc= &#34;    Retrieving image URLs&#34;, unit=&#34;ch&#34;):
+                urlImages.append(f.result())
+        urlImages = sorted(urlImages, key = __getChapterNbr__)
+        return urlImages
+
+    def __downloadOneImage__(self, oneImage: Tuple[str, int, int, str])-&gt; bool:
+        returnValue = downloadImage(oneImage[3], oneImage[0])
+        return returnValue
+
+    def __progressBarAllInitManga__(self, urlImages: List[List[Tuple[str, int, str, str]]], mangaName: str):
+        with tqdm(total=len(urlImages), desc= &#34;    &#34; + mangaName, unit=&#34;ch&#34;, position=0, leave=True) as bar:
+            self.__downloadAllImagesThread__(urlImages, bar)
+
+    def __downloadAllImagesThread__(self, urlImages: List[List[Tuple[str, int, str, str]]], bar: tqdm = None):
+        errorChapter = []
+        with concurrent.futures.ThreadPoolExecutor() as executor :
+            for urlImagesOneChapter in urlImages :
+                futures_list = [executor.submit(self.__downloadOneImage__, image) for image in urlImagesOneChapter]
+                for f in tqdm(concurrent.futures.as_completed(futures_list), total=len(futures_list), leave=False, desc= &#34;        Chapter &#34; + urlImagesOneChapter[0][2], unit=&#34;img&#34;):
+                    if (f.result() == False):
+                        errorChapter.append(urlImagesOneChapter[0][2])
+                chapterInfo(len(urlImagesOneChapter), self.url, urlImagesOneChapter[0][3][:urlImagesOneChapter[0][3].rfind(&#34;\\&#34;)])
+                if not (bar is None):
+                    bar.update()
+
+    def __progressBarAllInitNovel__(self, urlChapter: List[Tuple[str, str]], mangaName: str, opts: Dict):
+        with tqdm(total=len(urlChapter), desc= &#34;    &#34; + mangaName, unit=&#34;ch&#34;, position=0, leave=True) as bar:
+            self.__downloadAllNovel__(urlChapter, opts, bar)
+
+    def __getSoupFromNovel__(self, urlOneChapter:str)-&gt;BeautifulSoup:
+        r = getAPage(urlOneChapter)
+        if (r == None):
+            return None
+        soup = BeautifulSoup(r.text, features=&#34;html.parser&#34;)
+        return (soup)
+
+    def __downoaldNovelOneChapter__(self, urlOneChapter:Tuple[str, str], opts: Dict):
+        soup = self.__getSoupFromNovel__(urlOneChapter[0])
+        if (soup != None):
+            text = self.getTextFromOneChapter(soup)
+            os.makedirs(os.path.dirname(urlOneChapter[1]), exist_ok=True)
+            with open(urlOneChapter[1], &#34;w+&#34;, encoding=&#34;utf-8&#34;) as file:
+                if (&#34;trad&#34; in opts):
+                    text = opts[&#34;trad&#34;][0].translate(text, dest=opts[&#34;trad&#34;][1], src=&#34;en&#34;).text
+                file.write(text)
+
+    def __downloadAllNovel__(self, urlChapter: List[Tuple[str, str]], opts: Dict, bar: tqdm = None):
+        for urlOneChapter in urlChapter :
+            self.__downoaldNovelOneChapter__(urlOneChapter, opts)
+            if not (bar is None):
+                bar.update()
+
+    def __addPathToChpterList__(self, urlChapterList:List[Tuple[str, str]], manga: Manga, mangatype: MangaType)-&gt;List[Tuple[str, str]]:
+        for index, oneChapter in enumerate(urlChapterList):
+            if (mangatype == MangaType.MANGA):
+                urlChapterList[index] = (oneChapter[0], os.path.join(manga.path, &#34;Manga&#34;, &#34;Chapter &#34; + remove(oneChapter[1].strip() ,&#39;\\/:*?&#34;&lt;&gt;|&#39;)))
+            elif (mangatype == MangaType.NOVEL):
+                urlChapterList[index] = (oneChapter[0], os.path.join(manga.path, &#34;Novel&#34;, &#34;Chapter &#34; + remove(oneChapter[1].strip() ,&#39;\\/:*?&#34;&lt;&gt;|&#39;) + &#34;.txt&#34;))
+        return urlChapterList
+
+    def __createNewManga__(self, info: Dict[str, str], urlInfo: str, mangas: List[Manga])-&gt;List[Manga]:
+        correctNamePath = remove(info[&#34;name&#34;].strip() ,&#39;\\/:*?&#34;&lt;&gt;|&#39;)
+        path = os.path.join(&#34;.\\manga&#34;, correctNamePath)
+        os.makedirs(path, exist_ok=True)
+        manga = Manga(info[&#34;name&#34;], path, 0, [(self.url, urlInfo)])
+        manga.save()
+        mangas.append(manga)
+        return (mangas)
+
+    def __managerDownloader__(self, urlChapterList:List[Tuple[str, str]], mangas:List[Manga], urlInfo:str, opts: Dict, mangatype: MangaType, soupInfo:BeautifulSoup = None):
+        manga = None
+        urlImages = []
+
+        info = self.__getInfoManga__(urlInfo, soupInfo)
+        found = [x for x in mangas if x.name == info[&#34;name&#34;]]
+        if (found == []):
+            mangas = self.__createNewManga__(info, urlInfo, mangas)
+            manga = mangas[-1]
+        elif (len(found) == 1):
+            if (mangatype == MangaType.MANGA):
+                urlChapterList = self.__removeChapterAlreadyDownloadManga__(urlChapterList, found[0])
+            elif (mangatype == MangaType.NOVEL):
+                urlChapterList = self.__removeChapterAlreadyDownloadNovel__(urlChapterList, found[0])
+            manga = found[0]
+            if (manga.checkRegisterSite(self.url) == False):
+                manga.sites = manga.sites +  [(self.url, urlInfo)]
+        if (urlChapterList != None and urlChapterList != []):
+            if (mangatype == MangaType.MANGA):
+                self.__managerDownloaderImage__(urlChapterList, manga, opts)
+            elif (mangatype == MangaType.NOVEL):
+                self.__managerDownloaderText__(urlChapterList, manga, opts)
+            if (&#34;notification&#34; in opts):
+                basicNotif(opts[&#34;notification&#34;], manga.name, len(urlChapterList), mangatype)
+
+    def __managerDownloaderText__(self, urlChapterList: List[Tuple[int, str]], manga: Manga, opts: Dict):
+        urlChapterList = self.__addPathToChpterList__(urlChapterList, manga, MangaType.NOVEL)
+        urlChapterList.reverse()
+        self.__progressBarAllInitNovel__(urlChapterList, manga.name, opts)
+
+    def __managerDownloaderImage__(self, urlChapterList: List[Tuple[int, str]], manga: Manga, opts: Dict):
+        urlChapterList = self.__addPathToChpterList__(urlChapterList, manga, MangaType.MANGA)
+        urlImages = self.__recupAllImageFromChapterUrl__(urlChapterList)
+        self.__progressBarAllInitManga__(urlImages, manga.name)
+
+    def __getType__(self, opts: str)-&gt;MangaType:
+        if (self.siteTypeManga != []):
+            for opt in opts:
+                if (opt == &#39;-m&#39; or opt == &#34;--manga&#34;):
+                    if (MangaType.MANGA in self.siteTypeManga):
+                        return MangaType.MANGA
+                    else:
+                        print(&#34;This site doesn’t accept this type of manga&#34;)
+                        return MangaType.NONE
+                if (opt == &#39;-n&#39; or opt == &#34;--novel&#34;):
+                    if (MangaType.NOVEL in self.siteTypeManga):
+                        return MangaType.NOVEL
+                    else:
+                        print(&#34;This site doesn’t accept this type of manga&#34;)
+                        return MangaType.NONE
+            if (len(self.siteTypeManga) == 1):
+                return self.siteTypeManga[0]
+            else:
+                print(&#34;You need to precise what type of manga you want with the option: \&#34;-m\&#34; or \&#34;-n\&#34;&#34;)
+                return MangaType.NONE
+        else:
+            print(&#34;This site doesn’t have any type of manga&#34;)
+            return MangaType.NONE
+
+    def __gestOpt__(self, opts: List[str], typeUrl:UrlType, mangatype: MangaType)-&gt; Dict:
+        dictio = {}
+
+        for opt in opts :
+            dictio = translateModule(dictio, opt, mangatype)
+            dictio = notificationOpt(dictio, opt)
+        return (dictio)
+
+    def __urlManager__(self, url: str, opts: List[str], mangas: List[Manga], directory: str = &#34;&#34;) :
+        typeUrl = self.analyseURL(url)
+        typemanga = self.__getType__(opts)
+        urlInfo = url
+        soupInfo = None
+        urlChapterList = []
+
+        if (typeUrl != UrlType.NONE and typemanga != MangaType.NONE):
+            opts = self.__gestOpt__(opts, typeUrl, typemanga)
+            if (typeUrl == UrlType.ALLCHAPTER) :
+                urlChapterList, soupInfo = self.__getAllChapter__(url)
+            elif (typeUrl == UrlType.ONECHAPTER) :
+                urlInfo = self.getUrlInfoFromChapter(url)
+                urlChapterList = [(url, self.getChapterNbrFromUrl(url))]
+            self.__managerDownloader__(urlChapterList, mangas, urlInfo, opts, typemanga, soupInfo)</code></pre>
+</details>
+<h3>Class variables</h3>
+<dl>
+<dt id="include.Site.Site.siteTypeManga"><code class="name">var <span class="ident">siteTypeManga</span> : List[<a title="include.Enum.MangaType" href="Enum.html#include.Enum.MangaType">MangaType</a>]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="include.Site.Site.analyseURL"><code class="name flex">
+<span>def <span class="ident">analyseURL</span></span>(<span>self, url: str) -> <a title="include.Enum.UrlType" href="Enum.html#include.Enum.UrlType">UrlType</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Lets you know from the url of a page if it is a page with all the chapters (UrlType.ALLCHAPTER) or just a chapter (UrlType.ONECHAPTER)</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>url</code></strong> :&ensp;<code>str</code></dt>
+<dd>URL to analyze</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>UrlType</code></dt>
+<dd>Returns the type of the page either UrlType.ALLCHAPTER or UrlType.ONECHAPTER</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def analyseURL(self, url:str)-&gt;UrlType :
+    &#34;&#34;&#34;Lets you know from the url of a page if it is a page with all the chapters (UrlType.ALLCHAPTER) or just a chapter (UrlType.ONECHAPTER)
+
+    Args:
+        url (str): URL to analyze
+
+    Returns:
+        UrlType: Returns the type of the page either UrlType.ALLCHAPTER or UrlType.ONECHAPTER
+    &#34;&#34;&#34;
+    return UrlType.NONE</code></pre>
+</details>
+</dd>
+<dt id="include.Site.Site.getChapterNbrFromUrl"><code class="name flex">
+<span>def <span class="ident">getChapterNbrFromUrl</span></span>(<span>self, urlChapter: str) -> str</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Allows you to know the chapter number from the url</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>urlChapter</code></strong> :&ensp;<code>str</code></dt>
+<dd>URL to analyze</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>str</code></dt>
+<dd>Returns the number of the chapter</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def getChapterNbrFromUrl(self, urlChapter: str)-&gt; str:
+    &#34;&#34;&#34;Allows you to know the chapter number from the url
+
+    Args:
+        urlChapter (str): URL to analyze
+
+    Returns:
+        str: Returns the number of the chapter
+    &#34;&#34;&#34;
+    return urlChapter</code></pre>
+</details>
+</dd>
+<dt id="include.Site.Site.getImageFromOneChapter"><code class="name flex">
+<span>def <span class="ident">getImageFromOneChapter</span></span>(<span>self, soup: bs4.BeautifulSoup, path: str) -> List[Tuple[str, int, int, str]]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Used to retrieve information from the images in this chapter</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>soup</code></strong> :&ensp;<code>BeautifulSoup</code></dt>
+<dd>Have HTML code of the web page in form of BeautifulSoup</dd>
+<dt><strong><code>path</code></strong> :&ensp;<code>str</code></dt>
+<dd>Have the path to save the image of this chapter</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>List[Tuple[str, int, int, str]]</code></dt>
+<dd>Returns a tuple list containing information about the images in this chapter [ Url to download the image, Number of this image, Number of this chapter, Path of this image ]</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def getImageFromOneChapter(self, soup: BeautifulSoup, path: str)-&gt;List[Tuple[str, int, int, str]]:
+    &#34;&#34;&#34;Used to retrieve information from the images in this chapter
+
+    Args:
+        soup (BeautifulSoup): Have HTML code of the web page in form of BeautifulSoup
+        path (str): Have the path to save the image of this chapter
+
+    Returns:
+        List[Tuple[str, int, int, str]]: Returns a tuple list containing information about the images in this chapter [ Url to download the image, Number of this image, Number of this chapter, Path of this image ]
+    &#34;&#34;&#34;
+    return []</code></pre>
+</details>
+</dd>
+<dt id="include.Site.Site.getTextFromOneChapter"><code class="name flex">
+<span>def <span class="ident">getTextFromOneChapter</span></span>(<span>self, soupOneChapter: bs4.BeautifulSoup) -> str</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Allows you to recover the text of this chapter of a novel</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>soupOneChapter</code></strong> :&ensp;<code>BeautifulSoup</code></dt>
+<dd>Have HTML code of the web page in form of BeautifulSoup</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>str</code></dt>
+<dd>Return the text of this chapter of the novel</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def getTextFromOneChapter(self, soupOneChapter: BeautifulSoup)-&gt;str:
+    &#34;&#34;&#34;Allows you to recover the text of this chapter of a novel
+
+    Args:
+        soupOneChapter (BeautifulSoup): Have HTML code of the web page in form of BeautifulSoup
+
+    Returns:
+        str: Return the text of this chapter of the novel
+    &#34;&#34;&#34;
+    return &#34;&#34;</code></pre>
+</details>
+</dd>
+<dt id="include.Site.Site.getUrlInfoFromChapter"><code class="name flex">
+<span>def <span class="ident">getUrlInfoFromChapter</span></span>(<span>self, urlChapter: str) -> str</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Allows to recover from the URL the URL of the web page containing all the chapters</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>urlChapter</code></strong> :&ensp;<code>str</code></dt>
+<dd>URL to analyze</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>str</code></dt>
+<dd>URL of the web page containing all the chapter</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def getUrlInfoFromChapter(self, urlChapter: str)-&gt; str :
+    &#34;&#34;&#34;Allows to recover from the URL the URL of the web page containing all the chapters
+
+    Args:
+        urlChapter (str): URL to analyze
+
+    Returns:
+        str: URL of the web page containing all the chapter
+    &#34;&#34;&#34;
+    if (urlChapter[-1] == &#34;/&#34;):
+        urlChapter = urlChapter[:-1]
+    return urlChapter[:urlChapter.rfind(&#34;/&#34;)]</code></pre>
+</details>
+</dd>
+<dt id="include.Site.Site.recupAllChapter"><code class="name flex">
+<span>def <span class="ident">recupAllChapter</span></span>(<span>self, soup: bs4.BeautifulSoup) -> List[Tuple[str, str]]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Retrieve all chapter from the UrlType.ALLCHAPTER</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>soup</code></strong> :&ensp;<code>BeautifulSoup</code></dt>
+<dd>Have HTML code of the web page in form of BeautifulSoup</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>List[Tuple[str, str]]</code></dt>
+<dd>Returns a tuple list containing the chapter url and the chapter number (+ chapter title, optional)</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def recupAllChapter(self, soup: BeautifulSoup) -&gt; List[Tuple[str, str]]:
+    &#34;&#34;&#34;Retrieve all chapter from the UrlType.ALLCHAPTER
+
+    Args:
+        soup (BeautifulSoup): Have HTML code of the web page in form of BeautifulSoup
+
+    Returns:
+        List[Tuple[str, str]]: Returns a tuple list containing the chapter url and the chapter number (+ chapter title, optional)
+    &#34;&#34;&#34;
+    return []</code></pre>
+</details>
+</dd>
+<dt id="include.Site.Site.recupInfoManga"><code class="name flex">
+<span>def <span class="ident">recupInfoManga</span></span>(<span>self, soup: bs4.BeautifulSoup) -> Dict[str, str]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Retrieve the manga informations. Name is required</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>soup</code></strong> :&ensp;<code>BeautifulSoup</code></dt>
+<dd>Have HTML code of the web page in form of BeautifulSoup</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>Dict[str, str]</code></dt>
+<dd>Return a dictionary containing information about the manga. Name is required</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def recupInfoManga(self, soup: BeautifulSoup)-&gt; Dict[str, str]:
+    &#34;&#34;&#34;Retrieve the manga informations. Name is required
+
+    Args:
+        soup (BeautifulSoup): Have HTML code of the web page in form of BeautifulSoup
+
+    Returns:
+        Dict[str, str]: Return a dictionary containing information about the manga. Name is required
+    &#34;&#34;&#34;
+    return {}</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="include" href="index.html">include</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="include.Site.Site" href="#include.Site.Site">Site</a></code></h4>
+<ul class="">
+<li><code><a title="include.Site.Site.analyseURL" href="#include.Site.Site.analyseURL">analyseURL</a></code></li>
+<li><code><a title="include.Site.Site.getChapterNbrFromUrl" href="#include.Site.Site.getChapterNbrFromUrl">getChapterNbrFromUrl</a></code></li>
+<li><code><a title="include.Site.Site.getImageFromOneChapter" href="#include.Site.Site.getImageFromOneChapter">getImageFromOneChapter</a></code></li>
+<li><code><a title="include.Site.Site.getTextFromOneChapter" href="#include.Site.Site.getTextFromOneChapter">getTextFromOneChapter</a></code></li>
+<li><code><a title="include.Site.Site.getUrlInfoFromChapter" href="#include.Site.Site.getUrlInfoFromChapter">getUrlInfoFromChapter</a></code></li>
+<li><code><a title="include.Site.Site.recupAllChapter" href="#include.Site.Site.recupAllChapter">recupAllChapter</a></code></li>
+<li><code><a title="include.Site.Site.recupInfoManga" href="#include.Site.Site.recupInfoManga">recupInfoManga</a></code></li>
+<li><code><a title="include.Site.Site.siteTypeManga" href="#include.Site.Site.siteTypeManga">siteTypeManga</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.8.1</a>.</p>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
+</body>
+</html>
