@@ -9,6 +9,7 @@ import os
 import time
 from tools.Opt.UpdateOpt.timeOpt import timerOpt
 from tools.Opt.UpdateOpt.AllChapter import allOpt
+from tools.Opt.UpdateOpt.NotificationOpt import notificationOpt
 
 class Update:
     url: str
@@ -31,7 +32,7 @@ class Update:
             urlChapterList = [chapter for chapter in urlChapterList if float(chapter[1]) > self.last_chapter]
         if (urlChapterList != []):
             max = float(urlChapterList[0][1])
-            self.site.__managerDownloader__(urlChapterList, mangas, self.url, {}, self.mangaType, soupInfo)
+            self.site.__managerDownloader__(urlChapterList, mangas, self.url, dictio, self.mangaType, soupInfo)
             self.last_chapter = max
 
 
@@ -71,19 +72,22 @@ def gestOpt(opts: List[str])-> Dict:
     for opt in opts :
         dictio = timerOpt(dictio, opt)
         dictio = allOpt(dictio, opt)
+        dictio = notificationOpt(dictio, opt)
     return dictio
 
 def getUpdate(opts: List[str], updates: List[Update], mangas: List[Manga]):
     dictio = gestOpt(opts)
     timed = dictio.get("timer", None)
+    first = True
 
     try:
-        while (timed != None):
+        while (first == True or timed != None):
             for update in updates:
                 update.update(mangas, dictio)
                 saveUpdateList(updates)
             if (timed != None):
                 print ("\tWill wait " + str(timed) + " min before check update again")
                 time.sleep(timed * 60)
+            first = False
     except KeyboardInterrupt:
         timed = None

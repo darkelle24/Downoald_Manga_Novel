@@ -17,13 +17,10 @@ def translateModule(dictio: Dict, opt: str, mangatype: MangaType)-> Dict:
                         dictio["trad"] = (trad.Translator(), lang)
                     else:
                         print("The language "+ lang + " is not available")
-                    return dictio
                 else:
                     print("To use Traduction module you need to install googletrans: pip install googletrans")
-                    return dictio
             else:
                 dictio["trad"] = (sys.modules["googletrans"].Translator(), lang)
         else:
             print("Traduction module is only available for Novel type")
-            return dictio
     return dictio

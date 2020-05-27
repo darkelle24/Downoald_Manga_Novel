@@ -11,6 +11,7 @@ from tools.Opt.NovelOpt.traductionModule import translateModule
 from include.Enum import UrlType, MangaType
 import concurrent.futures
 import os, shutil
+from tools.Opt.UpdateOpt.NotificationOpt import basicNotif, notificationOpt
 
 def getChapterNbr(elem: List[Tuple[str, int, int, str]]):
     return float(elem[0][2])
@@ -211,11 +212,13 @@ class Site:
             manga = found[0]
             if (manga.checkRegisterSite(self.url) == False):
                 manga.sites = manga.sites +  [(self.url, urlInfo)]
-        if (urlChapterList != []):
+        if (urlChapterList != None and urlChapterList != []):
             if (mangatype == MangaType.MANGA):
                 self.__managerDownloaderImage__(urlChapterList, manga, opts)
             elif (mangatype == MangaType.NOVEL):
                 self.__managerDownloaderText__(urlChapterList, manga, opts)
+            if ("notification" in opts):
+                basicNotif(opts["notification"], manga.name, len(urlChapterList), mangatype)
 
     def __managerDownloaderText__(self, urlChapterList: List[Tuple[int, str]], manga: Manga, opts: Dict):
         urlChapterList = self.__addPathToChpterList__(urlChapterList, manga, MangaType.NOVEL)
@@ -256,6 +259,7 @@ class Site:
 
         for opt in opts :
             dictio = translateModule(dictio, opt, mangatype)
+            dictio = notificationOpt(dictio, opt)
         return (dictio)
 
     def urlManager(self, url: str, opts: List[str], mangas: List[Manga], directory: str = "") :
