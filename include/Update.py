@@ -6,7 +6,9 @@ from include.Manga import Manga
 import json
 from typing import List, Dict
 import os
+import time
 from tools.Opt.UpdateOpt.timeOpt import timerOpt
+from tools.Opt.UpdateOpt.AllChapter import allOpt
 
 class Update:
     url: str
@@ -23,9 +25,10 @@ class Update:
     def __str__(self):
         return (self.url + "  " + str(self.last_chapter) + "  " + self.site.url + "  " + str(self.mangaType))
 
-    def update(self, mangas: List[Manga]):
+    def update(self, mangas: List[Manga], dictio: Dict):
         urlChapterList, soupInfo = self.site.__getAllChapter__(self.url)
-        urlChapterList = [chapter for chapter in urlChapterList if float(chapter[1]) > self.last_chapter]
+        if (dictio.get("allChapter", None) == None):
+            urlChapterList = [chapter for chapter in urlChapterList if float(chapter[1]) > self.last_chapter]
         if (urlChapterList != []):
             max = float(urlChapterList[0][1])
             self.site.__managerDownloader__(urlChapterList, mangas, self.url, {}, self.mangaType, soupInfo)
@@ -67,9 +70,20 @@ def gestOpt(opts: List[str])-> Dict:
 
     for opt in opts :
         dictio = timerOpt(dictio, opt)
+        dictio = allOpt(dictio, opt)
     return dictio
 
-def getUpdate(updates: List[Update], mangas: List[Manga]):
-    for update in updates:
-        update.update(mangas)
-        saveUpdateList(updates)
+def getUpdate(opts: List[str], updates: List[Update], mangas: List[Manga]):
+    dictio = gestOpt(opts)
+    timed = dictio.get("timer", None)
+
+    try:
+        while (timed != None):
+            for update in updates:
+                update.update(mangas, dictio)
+                saveUpdateList(updates)
+            if (timed != None):
+                print ("\tWill wait " + (timed * 60) + " min before check update again")
+                time.sleep(timed * 60)
+    except KeyboardInterrupt:
+        timed = None

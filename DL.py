@@ -65,7 +65,7 @@ def main():
                 for update in updates:
                     print("\t" + update.__str__())
             elif (getInput[0] == "update"):
-                getUpdate(updates, mangas)
+                getUpdate(getInput, updates, mangas)
             elif (getInput[0] == "reload"):
                 directory = ""
                 sites, mangas, updates = init()
