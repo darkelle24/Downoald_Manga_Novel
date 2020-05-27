@@ -1,11 +1,12 @@
-from tools.findSiteWithUrl import findSiteWithUrl
+from tools.Other.findSiteWithUrl import findSiteWithUrl
 from include.Enum import UrlType, MangaType
-from tools.remove import remove
+from tools.Other.remove import remove
 from include.Site import Site
 from include.Manga import Manga
 import json
-from typing import List
+from typing import List, Dict
 import os
+from tools.Opt.UpdateOpt.timeOpt import timerOpt
 
 class Update:
     url: str
@@ -60,6 +61,13 @@ def setUpdateWithUrl(opts, sites, update)->List[Update]:
             else:
                 print("Wrong type of URL")
     return update
+
+def gestOpt(opts: List[str])-> Dict:
+    dictio = {}
+
+    for opt in opts :
+        dictio = timerOpt(dictio, opt)
+    return dictio
 
 def getUpdate(updates: List[Update], mangas: List[Manga]):
     for update in updates:

@@ -1,13 +1,13 @@
-from tools.downloadImage import downloadImage
-from tools.SiteMetaData import chapterInfo
-from tools.getPage import getAPage
-from tools.remove import remove
+from tools.Other.downloadImage import downloadImage
+from tools.Other.SiteMetaData import chapterInfo
+from tools.Other.getPage import getAPage
+from tools.Other.remove import remove
 from include.Manga import Manga
 from typing import Tuple, List, Union, Dict
 from termcolor import colored
 from bs4 import BeautifulSoup
 from tqdm import tqdm
-from tools.traductionModule import translateModule
+from tools.Opt.NovelOpt.traductionModule import translateModule
 from include.Enum import UrlType, MangaType
 import concurrent.futures
 import os, shutil
@@ -125,7 +125,7 @@ class Site:
         with concurrent.futures.ThreadPoolExecutor() as executor :
             result = [executor.submit(self.__getOneChapter__, oneChapter[0], oneChapter[1]) for oneChapter in urlChapterList]
 
-            for f in tqdm(concurrent.futures.as_completed(result), total=len(result), leave=False, desc= "Retrieving image URLs", unit="ch"):
+            for f in tqdm(concurrent.futures.as_completed(result), total=len(result), leave=False, desc= "    Retrieving image URLs", unit="ch"):
                 urlImages.append(f.result())
         urlImages = sorted(urlImages, key = getChapterNbr)
         return urlImages
@@ -135,7 +135,7 @@ class Site:
         return returnValue
 
     def __progressBarAllInitManga__(self, urlImages: List[List[Tuple[str, int, str, str]]], mangaName: str):
-        with tqdm(total=len(urlImages), desc= mangaName, unit="ch", position=0, leave=True) as bar:
+        with tqdm(total=len(urlImages), desc= "    " + mangaName, unit="ch", position=0, leave=True) as bar:
             self.__downloadAllImagesThread__(urlImages, bar)
 
     def __downloadAllImagesThread__(self, urlImages: List[List[Tuple[str, int, str, str]]], bar: tqdm = None):
@@ -143,7 +143,7 @@ class Site:
         with concurrent.futures.ThreadPoolExecutor() as executor :
             for urlImagesOneChapter in urlImages :
                 futures_list = [executor.submit(self.__downloadOneImage__, image) for image in urlImagesOneChapter]
-                for f in tqdm(concurrent.futures.as_completed(futures_list), total=len(futures_list), leave=False, desc= "    Chapter " + urlImagesOneChapter[0][2], unit="img"):
+                for f in tqdm(concurrent.futures.as_completed(futures_list), total=len(futures_list), leave=False, desc= "        Chapter " + urlImagesOneChapter[0][2], unit="img"):
                     if (f.result() == False):
                         errorChapter.append(urlImagesOneChapter[0][2])
                 chapterInfo(len(urlImagesOneChapter), self.url, urlImagesOneChapter[0][3][:urlImagesOneChapter[0][3].rfind("\\")])
@@ -151,7 +151,7 @@ class Site:
                     bar.update()
 
     def __progressBarAllInitNovel__(self, urlChapter: List[Tuple[str, str]], mangaName: str, opts: Dict):
-        with tqdm(total=len(urlChapter), desc= mangaName, unit="ch", position=0, leave=True) as bar:
+        with tqdm(total=len(urlChapter), desc= "    " + mangaName, unit="ch", position=0, leave=True) as bar:
             self.__downloadAllNovel__(urlChapter, opts, bar)
 
     def __getSoupFromNovel__(self, urlOneChapter:str)->BeautifulSoup:
@@ -227,7 +227,7 @@ class Site:
         urlImages = self.__recupAllImageFromChapterUrl__(urlChapterList)
         self.__progressBarAllInitManga__(urlImages, manga.name)
 
-    def __getType__(self, opts: List[str])->MangaType:
+    def __getType__(self, opts: str)->MangaType:
         if (self.siteTypeManga != []):
             for opt in opts:
                 if (opt == '-m' or opt == "--manga"):
@@ -242,10 +242,10 @@ class Site:
                     else:
                         print("This site doesn’t accept this type of manga")
                         return MangaType.NONE
-            if (MangaType.MANGA in self.siteTypeManga):
-                return MangaType.MANGA
+            if (len(self.siteTypeManga) == 1):
+                return self.siteTypeManga[0]
             else:
-                print("This site doesn’t accept this type of manga")
+                print("You need to precise what type of manga you want with the option: \"-m\" or \"-n\"")
                 return MangaType.NONE
         else:
             print("This site doesn’t have any type of manga")
@@ -254,7 +254,8 @@ class Site:
     def __gestOpt__(self, opts: List[str], typeUrl:UrlType, mangatype: MangaType)-> Dict:
         dictio = {}
 
-        dictio = translateModule(dictio, opts, mangatype)
+        for opt in opts :
+            dictio = translateModule(dictio, opt, mangatype)
         return (dictio)
 
     def urlManager(self, url: str, opts: List[str], mangas: List[Manga], directory: str = "") :

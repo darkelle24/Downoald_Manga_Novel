@@ -1,7 +1,7 @@
 from include.Site import Site, UrlType, MangaType
 from typing import Tuple, List, Union, Dict
 from bs4 import BeautifulSoup
-from tools.getPage import getAPage
+from tools.Other.getPage import getAPage
 import os
 
 class isekaiscan(Site):

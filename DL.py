@@ -3,11 +3,11 @@
 from sys import exit
 import os
 from include.Site import Site
-from tools.loadAllSite import loadAllSite
-from tools.loadAllManga import loadAllManga
-from tools.loadUpdate import loadUpdate
+from tools.Load.loadAllSite import loadAllSite
+from tools.Load.loadAllManga import loadAllManga
+from tools.Load.loadUpdate import loadUpdate
 from include.Update import setUpdateWithUrl, getUpdate
-from tools.findSiteWithUrl import findSiteWithUrl
+from tools.Other.findSiteWithUrl import findSiteWithUrl
 
 def downloadWithUrl(opts, directory, sites, mangas):
     url = ""

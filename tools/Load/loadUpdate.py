@@ -2,7 +2,7 @@ import os
 import json
 from typing import List
 from include.Update import Update
-from tools.findSiteWithUrl import findSiteWithUrl
+from tools.Other.findSiteWithUrl import findSiteWithUrl
 from include.Site import Site
 from include.Enum import MangaType
 
