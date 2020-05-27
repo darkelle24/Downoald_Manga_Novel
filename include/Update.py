@@ -83,7 +83,7 @@ def getUpdate(opts: List[str], updates: List[Update], mangas: List[Manga]):
                 update.update(mangas, dictio)
                 saveUpdateList(updates)
             if (timed != None):
-                print ("\tWill wait " + (timed * 60) + " min before check update again")
+                print ("\tWill wait " + str(timed) + " min before check update again")
                 time.sleep(timed * 60)
     except KeyboardInterrupt:
         timed = None
