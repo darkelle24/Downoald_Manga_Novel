@@ -8,7 +8,8 @@ class isekaiscan(Site):
     url = "isekaiscan.com"
     siteTypeManga = [MangaType.MANGA]
 
-    def recupInfoManga(self, soup: BeautifulSoup, info: Dict[str, str])-> Dict[str, str]:
+    def recupInfoManga(self, soup: BeautifulSoup)-> Dict[str, str]:
+        info = dict()
         name = soup.find("h3")
         if (name.string == None):
             name = name.text.replace("HOT", "").replace("NEW", "").strip()
@@ -17,7 +18,7 @@ class isekaiscan(Site):
         info["name"] = name
         return info
 
-    def recupOneChapter(self, soup: BeautifulSoup, path: str)->List[Tuple[str, int, str, str]]:
+    def getImageFromOneChapter(self, soup: BeautifulSoup, path: str)->List[Tuple[str, int, int, str]]:
         images = []
 
         chapter = soup.find("h1", attrs={"id": "chapter-heading"})

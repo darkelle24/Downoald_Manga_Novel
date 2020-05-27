@@ -18,7 +18,7 @@ def downloadWithUrl(opts, directory, sites, mangas):
             break
     site = findSiteWithUrl(url, sites)
     if (site != None):
-        site.urlManager(url, opts, mangas, directory)
+        site.__urlManager__(url, opts, mangas, directory)
 
 ##def command(cmd: str):
 ##    switcher={
@@ -72,4 +72,5 @@ def main():
     except KeyboardInterrupt:
         exit(0)
 
-main()
+if (__name__== "__main__"):
+    main()

@@ -59,7 +59,7 @@ def setUpdateWithUrl(opts, sites, update)->List[Update]:
             if (typeUrl == UrlType.ALLCHAPTER):
                 urlChapterList, soupInfo = site.__getAllChapter__(url)
                 ##info = site.__getInfoManga__(urlInfo, soupInfo)
-                ##correctNamePath = remove(info["name"].strip() ,'\/:*?"<>|')
+                ##correctNamePath = remove(info["name"].strip() ,'\\/:*?"<>|')
                 update.append(Update(url, site, float(urlChapterList[0][1]), mangaType))
                 saveUpdateList(update)
             else:

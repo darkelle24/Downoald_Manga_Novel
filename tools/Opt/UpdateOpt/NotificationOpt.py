@@ -24,5 +24,6 @@ def basicNotif(notifModule, name: str, nbrChapter: int, mangaType: MangaType):
         title='Finish Download ' + mangatype,
         message=name + "\n\nDownload " + str(nbrChapter) + " chapters",
         app_name='Manga Downloader',
-        app_icon=r'.\Resource\icon.ico'
+        app_icon=r'.\Resource\icon.ico',
+        ticker='Finish Download ' + mangatype
     )
