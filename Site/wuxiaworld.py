@@ -8,7 +8,9 @@ class wuxiaworld(Site):
     url = "wuxiaworld.site"
     siteTypeManga = [MangaType.NOVEL]
 
-    def recupInfoManga(self, soup: BeautifulSoup, info: Dict[str, str])-> Dict[str, str]:
+    def recupInfoManga(self, soup: BeautifulSoup)-> Dict[str, str]:
+        info = dict()
+
         name = soup.find("h3")
         if (name.string == None):
             name = name.text.replace("HOT", "").replace("NEW", "").strip()
