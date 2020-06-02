@@ -12,6 +12,8 @@ from include.Enum import UrlType, MangaType
 import concurrent.futures
 import os, shutil
 from tools.Opt.UpdateOpt.NotificationOpt import basicNotif, notificationOpt
+from tools.Opt.MangaOpt.numberWorkerOpt import number_worker
+import sys
 
 def __getChapterNbr__(elem: List[Tuple[str, int, int, str]]):
     return float(elem[0][2])
@@ -190,18 +192,19 @@ class Site:
         returnValue = downloadImage(oneImage[3], oneImage[0])
         return returnValue
 
-    def __progressBarAllInitManga__(self, urlImages: List[List[Tuple[str, int, str, str]]], mangaName: str):
+    def __progressBarAllInitManga__(self, urlImages: List[List[Tuple[str, int, str, str]]], mangaName: str, opts: Dict = {"workers": 5}):
         with tqdm(total=len(urlImages), desc= "    " + mangaName, unit="ch", position=0, leave=True) as bar:
-            self.__downloadAllImagesThread__(urlImages, bar)
+            self.__downloadAllImagesThread__(urlImages, bar, opts)
 
-    def __downloadAllImagesThread__(self, urlImages: List[List[Tuple[str, int, str, str]]], bar: tqdm = None):
+    def __downloadAllImagesThread__(self, urlImages: List[List[Tuple[str, int, str, str]]], bar: tqdm = None, opts: Dict = {"workers": 5}):
         errorChapter = []
-        with concurrent.futures.ThreadPoolExecutor() as executor :
+        with concurrent.futures.ThreadPoolExecutor(max_workers=opts["workers"]) as executor :
             for urlImagesOneChapter in urlImages :
                 futures_list = [executor.submit(self.__downloadOneImage__, image) for image in urlImagesOneChapter]
                 for f in tqdm(concurrent.futures.as_completed(futures_list), total=len(futures_list), leave=False, desc= "        Chapter " + urlImagesOneChapter[0][2], unit="img"):
                     if (f.result() == False):
                         errorChapter.append(urlImagesOneChapter[0][2])
+                        bar.write("Problem " + urlImagesOneChapter[0][2], file=sys.stderr)
                 chapterInfo(len(urlImagesOneChapter), self.url, urlImagesOneChapter[0][3][:urlImagesOneChapter[0][3].rfind("\\")])
                 if not (bar is None):
                     bar.update()
@@ -217,21 +220,34 @@ class Site:
         soup = BeautifulSoup(r.text, features="html.parser")
         return (soup)
 
-    def __downoaldNovelOneChapter__(self, urlOneChapter:Tuple[str, str], opts: Dict):
+    def __downoaldNovelOneChapter__(self, urlOneChapter:Tuple[str, str], opts: Dict)-> bool:
+        good = True
+
         soup = self.__getSoupFromNovel__(urlOneChapter[0])
         if (soup != None):
             text = self.getTextFromOneChapter(soup)
             os.makedirs(os.path.dirname(urlOneChapter[1]), exist_ok=True)
             with open(urlOneChapter[1], "w+", encoding="utf-8") as file:
                 if ("trad" in opts):
-                    text = opts["trad"][0].translate(text, dest=opts["trad"][1], src="en").text
+                    try:
+                        text = opts["trad"][0].translate(text, dest=opts["trad"][1], src="en").text
+                    except:
+                        good = False
+                        pass
                 file.write(text)
+        else:
+            good = False
+        return good
 
     def __downloadAllNovel__(self, urlChapter: List[Tuple[str, str]], opts: Dict, bar: tqdm = None):
-        for urlOneChapter in urlChapter :
-            self.__downoaldNovelOneChapter__(urlOneChapter, opts)
-            if not (bar is None):
-                bar.update()
+        with concurrent.futures.ThreadPoolExecutor(max_workers=opts["workers"]) as executor :
+            ##for urlOneChapter in urlChapter :
+                futures_list = [executor.submit(self.__downoaldNovelOneChapter__, urlOneChapter, opts) for urlOneChapter in urlChapter]
+                for f in concurrent.futures.as_completed(futures_list):
+                    if (f.result() == False):
+                        bar.write("Problem ", file=sys.stderr)
+                    if not (bar is None):
+                        bar.update()
 
     def __addPathToChpterList__(self, urlChapterList:List[Tuple[str, str]], manga: Manga, mangatype: MangaType)->List[Tuple[str, str]]:
         for index, oneChapter in enumerate(urlChapterList):
@@ -283,7 +299,7 @@ class Site:
     def __managerDownloaderImage__(self, urlChapterList: List[Tuple[int, str]], manga: Manga, opts: Dict):
         urlChapterList = self.__addPathToChpterList__(urlChapterList, manga, MangaType.MANGA)
         urlImages = self.__recupAllImageFromChapterUrl__(urlChapterList)
-        self.__progressBarAllInitManga__(urlImages, manga.name)
+        self.__progressBarAllInitManga__(urlImages, manga.name, opts)
 
     def __getType__(self, opts: str)->MangaType:
         if (self.siteTypeManga != []):
@@ -309,12 +325,18 @@ class Site:
             print("This site doesn’t have any type of manga")
             return MangaType.NONE
 
+    def __init_opt__(self)-> Dict:
+        dictio = {"workers": 5}
+
+        return dictio
+
     def __gestOpt__(self, opts: List[str], typeUrl:UrlType, mangatype: MangaType)-> Dict:
-        dictio = {}
+        dictio = self.__init_opt__()
 
         for opt in opts :
             dictio = translateModule(dictio, opt, mangatype)
             dictio = notificationOpt(dictio, opt)
+            dictio = number_worker(dictio, opt)
         return (dictio)
 
     def __urlManager__(self, url: str, opts: List[str], mangas: List[Manga], directory: str = "") :
