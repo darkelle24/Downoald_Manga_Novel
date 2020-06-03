@@ -7,7 +7,7 @@ from typing import Tuple, List, Union, Dict
 from termcolor import colored
 from bs4 import BeautifulSoup
 from tqdm import tqdm
-from tools.Opt.NovelOpt.traductionModule import translateModule
+from tools.Opt.NovelOpt.traductionModule import translateModule, translate
 from include.Enum import UrlType, MangaType
 import concurrent.futures
 import os, shutil
@@ -201,7 +201,7 @@ class Site:
         with concurrent.futures.ThreadPoolExecutor(max_workers=opts["workers"]) as executor :
             for urlImagesOneChapter in urlImages :
                 futures_list = [executor.submit(self.__downloadOneImage__, image) for image in urlImagesOneChapter]
-                for f in tqdm(concurrent.futures.as_completed(futures_list), total=len(futures_list), leave=False, desc= "        Chapter " + urlImagesOneChapter[0][2], unit="img"):
+                for f in tqdm(concurrent.futures.as_completed(futures_list, 120), total=len(futures_list), leave=False, desc= "        Chapter " + urlImagesOneChapter[0][2], unit="img"):
                     if (f.result() == False):
                         errorChapter.append(urlImagesOneChapter[0][2])
                         bar.write("Problem " + urlImagesOneChapter[0][2], file=sys.stderr)
@@ -220,34 +220,32 @@ class Site:
         soup = BeautifulSoup(r.text, features="html.parser")
         return (soup)
 
-    def __downoaldNovelOneChapter__(self, urlOneChapter:Tuple[str, str], opts: Dict)-> bool:
-        good = True
+    def __downoaldNovelOneChapter__(self, urlOneChapter:Tuple[str, str], opts: Dict)-> str:
+        good = ""
 
         soup = self.__getSoupFromNovel__(urlOneChapter[0])
         if (soup != None):
             text = self.getTextFromOneChapter(soup)
+            if ("trad" in opts):
+                try:
+                    text = translate(text, opts)
+                except:
+                    good = "Problem translation " + urlOneChapter[1]
             os.makedirs(os.path.dirname(urlOneChapter[1]), exist_ok=True)
             with open(urlOneChapter[1], "w+", encoding="utf-8") as file:
-                if ("trad" in opts):
-                    try:
-                        text = opts["trad"][0].translate(text, dest=opts["trad"][1], src="en").text
-                    except:
-                        good = False
-                        pass
                 file.write(text)
         else:
-            good = False
+            good = "Problem load load URL " + urlOneChapter[1]
         return good
 
     def __downloadAllNovel__(self, urlChapter: List[Tuple[str, str]], opts: Dict, bar: tqdm = None):
         with concurrent.futures.ThreadPoolExecutor(max_workers=opts["workers"]) as executor :
-            ##for urlOneChapter in urlChapter :
-                futures_list = [executor.submit(self.__downoaldNovelOneChapter__, urlOneChapter, opts) for urlOneChapter in urlChapter]
-                for f in concurrent.futures.as_completed(futures_list):
-                    if (f.result() == False):
-                        bar.write("Problem ", file=sys.stderr)
-                    if not (bar is None):
-                        bar.update()
+            futures_list = [executor.submit(self.__downoaldNovelOneChapter__, urlOneChapter, opts) for urlOneChapter in urlChapter]
+            for f in concurrent.futures.as_completed(futures_list, 120):
+                if (f.result() != ""):
+                    bar.write("Problem " + f.result(), file=sys.stderr)
+                if not (bar is None):
+                    bar.update()
 
     def __addPathToChpterList__(self, urlChapterList:List[Tuple[str, str]], manga: Manga, mangatype: MangaType)->List[Tuple[str, str]]:
         for index, oneChapter in enumerate(urlChapterList):

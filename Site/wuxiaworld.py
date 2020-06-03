@@ -32,7 +32,7 @@ class wuxiaworld(Site):
                     text = text + textget.string + "\n\n"
                 else:
                     text = text + textget.string
-        return (text)
+        return (text.replace("\n\n\n", "\n\n"))
 
     def recupAllChapter(self, soup: BeautifulSoup) -> List[Tuple[str, str]]:
         list_chapter = []

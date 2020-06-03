@@ -49,8 +49,8 @@ def main():
     try:
         while (getInput == [] or getInput[0].lower() != "stop"):
             ##try:
-                getInput = input(">>> ").split(" ")
-                getInput[0] = getInput[0].lower().strip()
+                getInput = input(">>> ").strip().split(" ")
+                getInput[0] = getInput[0].lower()
                 if (getInput[0] == "download") :
                     downloadWithUrl(getInput, directory, sites, mangas)
                 elif (getInput[0] == "site"):
@@ -72,7 +72,7 @@ def main():
                     directory = ""
                     sites, mangas, updates = init()
             ##except:
-                ##print("Unexpected error:", sys.exc_info()[0], file=sys.stderr)
+            ##    print("Unexpected error: ", sys.exc_info()[0], file=sys.stderr)
     except KeyboardInterrupt:
         exit(0)
 
