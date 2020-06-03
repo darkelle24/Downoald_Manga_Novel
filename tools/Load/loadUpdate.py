@@ -8,7 +8,7 @@ from include.Enum import MangaType
 
 def loadUpdate(directory: str, sites: Site)->List[Update]:
     listUpdate = []
-    path = os.join(directory, ".update.json")
+    path = os.path.join(directory, ".update.json")
 
     if (os.path.isfile(path)):
         with open(path, 'r') as jsonFile:

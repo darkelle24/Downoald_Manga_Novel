@@ -48,8 +48,8 @@ def main():
                     getUpdate(getInput, updates, mangas)
                 elif (getInput[0] == "reload"):
                     sites, mangas, updates = init(directory)
-                elif (getInput[0] == "changedirectory"):
-                    mangas, updates, directory = changeDirectory(sites, mangas, updates, directory)
+                elif (getInput[0] == "directory"):
+                    mangas, updates, directory = changeDirectory(sites, mangas, updates, directory, getInput)
             ##except:
             ##    print("Unexpected error: ", sys.exc_info()[0], file=sys.stderr)
     except KeyboardInterrupt:
