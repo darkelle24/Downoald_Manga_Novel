@@ -1,25 +1,11 @@
 #!/usr/bin/python3
 
 from sys import exit
-import os
-from include.Site import Site
-from tools.Load.loadAllSite import loadAllSite
-from tools.Load.loadAllManga import loadAllManga
-from tools.Load.loadUpdate import loadUpdate
+from tools.Command.DownloadWithUrl import downloadWithUrl
+from tools.Command.Init import init
+from tools.Command.ChangeDirectory import changeDirectory
 from include.Update import setUpdateWithUrl, getUpdate
-from tools.Other.findSiteWithUrl import findSiteWithUrl
 import sys
-
-def downloadWithUrl(opts, directory, sites, mangas):
-    url = ""
-
-    for opt in opts:
-        if (opt.startswith("http")):
-            url = opt
-            break
-    site = findSiteWithUrl(url, sites)
-    if (site != None):
-        site.__urlManager__(url, opts, mangas, directory)
 
 ##def command(cmd: str):
 ##    switcher={
@@ -30,22 +16,14 @@ def downloadWithUrl(opts, directory, sites, mangas):
 ##    func = switcher.get(cmd,lambda :'Invalid')
 ##    return func()
 
-def init():
-    os.system('color')
-    sites = loadAllSite()
-    mangas = loadAllManga()
-    updates = loadUpdate(sites)
-
-    return (sites, mangas, updates)
-
 def main():
     getInput = []
-    directory = ""
+    directory = "./manga"
     sites = []
     mangas = []
     updates = []
 
-    sites, mangas, updates = init()
+    sites, mangas, updates = init(directory)
     try:
         while (getInput == [] or getInput[0].lower() != "stop"):
             ##try:
@@ -69,8 +47,9 @@ def main():
                 elif (getInput[0] == "update"):
                     getUpdate(getInput, updates, mangas)
                 elif (getInput[0] == "reload"):
-                    directory = ""
-                    sites, mangas, updates = init()
+                    sites, mangas, updates = init(directory)
+                elif (getInput[0] == "changedirectory"):
+                    mangas, updates, directory = changeDirectory(sites, mangas, updates, directory)
             ##except:
             ##    print("Unexpected error: ", sys.exc_info()[0], file=sys.stderr)
     except KeyboardInterrupt:

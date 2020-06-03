@@ -2,11 +2,11 @@ from typing import List
 import os
 from include.Manga import Manga
 
-def loadAllManga()->List[Manga]:
+def loadAllManga(directory: str)->List[Manga]:
     mangas = []
-    if (os.path.isdir(r".\manga") == True):
-        for file in os.listdir(r".\manga") :
-            path = os.path.join(r".\manga", file)
+    if (os.path.isdir(directory) == True):
+        for file in os.listdir(directory) :
+            path = os.path.join(directory, file)
             if (os.path.isfile(os.path.join(path, ".info.json")) == True):
                 manga = Manga()
                 manga.load(path)

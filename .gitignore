@@ -135,3 +135,5 @@ manga/
 test.py
 
 manga
+
+*.ui

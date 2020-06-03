@@ -1,6 +1,7 @@
 from include.Site import Site
+from typing import List
 
-def findSiteWithUrl(url: str, sites)->Site:
+def findSiteWithUrl(url: str, sites: List[Site])->Site:
     for site in sites:
         if (url.split("/")[2] == site.url):
             return site

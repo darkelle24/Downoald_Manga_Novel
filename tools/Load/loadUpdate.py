@@ -6,11 +6,12 @@ from tools.Other.findSiteWithUrl import findSiteWithUrl
 from include.Site import Site
 from include.Enum import MangaType
 
-def loadUpdate(sites: Site)->List[Update]:
+def loadUpdate(directory: str, sites: Site)->List[Update]:
     listUpdate = []
+    path = os.join(directory, ".update.json")
 
-    if (os.path.isfile(r".\manga\.update.json")):
-        with open(r".\manga\.update.json", 'r') as jsonFile:
+    if (os.path.isfile(path)):
+        with open(path, 'r') as jsonFile:
             data = json.load(jsonFile)
             for update in data:
                 url = update["url"]

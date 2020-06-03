@@ -255,9 +255,9 @@ class Site:
                 urlChapterList[index] = (oneChapter[0], os.path.join(manga.path, "Novel", "Chapter " + remove(oneChapter[1].strip() ,'\\/:*?"<>|') + ".txt"))
         return urlChapterList
 
-    def __createNewManga__(self, info: Dict[str, str], urlInfo: str, mangas: List[Manga])->List[Manga]:
+    def __createNewManga__(self, info: Dict[str, str], urlInfo: str, mangas: List[Manga], directory: str)->List[Manga]:
         correctNamePath = remove(info["name"].strip() ,'\\/:*?"<>|')
-        path = os.path.join(".\\manga", correctNamePath)
+        path = os.path.join(directory, correctNamePath)
         os.makedirs(path, exist_ok=True)
         manga = Manga(info["name"], path, 0, [(self.url, urlInfo)])
         manga.save()
@@ -271,7 +271,7 @@ class Site:
         info = self.__getInfoManga__(urlInfo, soupInfo)
         found = [x for x in mangas if x.name == info["name"]]
         if (found == []):
-            mangas = self.__createNewManga__(info, urlInfo, mangas)
+            mangas = self.__createNewManga__(info, urlInfo, mangas, opts["directory"])
             manga = mangas[-1]
         elif (len(found) == 1):
             if (mangatype == MangaType.MANGA):
@@ -323,13 +323,16 @@ class Site:
             print("This site doesn’t have any type of manga")
             return MangaType.NONE
 
-    def __init_opt__(self)-> Dict:
-        dictio = {"workers": 5}
+    def __init_opt__(self, directory: str)-> Dict:
+        dictio = {
+            "workers": 5,
+            "directory": directory
+            }
 
         return dictio
 
-    def __gestOpt__(self, opts: List[str], typeUrl:UrlType, mangatype: MangaType)-> Dict:
-        dictio = self.__init_opt__()
+    def __gestOpt__(self, opts: List[str], typeUrl:UrlType, mangatype: MangaType, directory: str)-> Dict:
+        dictio = self.__init_opt__(directory)
 
         for opt in opts :
             dictio = translateModule(dictio, opt, mangatype)
@@ -345,7 +348,7 @@ class Site:
         urlChapterList = []
 
         if (typeUrl != UrlType.NONE and typemanga != MangaType.NONE):
-            opts = self.__gestOpt__(opts, typeUrl, typemanga)
+            opts = self.__gestOpt__(opts, typeUrl, typemanga, directory)
             if (typeUrl == UrlType.ALLCHAPTER) :
                 urlChapterList, soupInfo = self.__getAllChapter__(url)
             elif (typeUrl == UrlType.ONECHAPTER) :
