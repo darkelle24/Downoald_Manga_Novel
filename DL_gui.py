@@ -2,6 +2,7 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from App.Gui_action.Main_Window import Ui_MainWindow_Action
+from App.Gui.test import Ui_MainWindow
 
 if (__name__== "__main__"):
     import sys
