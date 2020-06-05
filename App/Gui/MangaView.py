@@ -11,10 +11,12 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 
 class MangaView(QtWidgets.QWidget):
-    def __init__(self, name = "", path = "", parent=None, *args, **kwargs):
+    def __init__(self, name = "", path = "", nbr_chapter = 0, parent=None, *args, **kwargs):
         super().__init__(parent=parent, *args, **kwargs)
         self.name = name
         self.path = path
+
+        self.nbr_chapter = nbr_chapter
 
         self.myLay = QtWidgets.QVBoxLayout()
         self.myLay.setContentsMargins(5, 5, 5, 5)
@@ -22,10 +24,10 @@ class MangaView(QtWidgets.QWidget):
 
         Form = QtWidgets.QFrame(parent)
         Form.setObjectName("Form")
-        Form.resize(125, 220)
-        Form.setMinimumSize(QtCore.QSize(125, 220))
+        Form.resize(125, 231)
+        Form.setMinimumSize(QtCore.QSize(125, 231))
         Form.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
-        
+
         self.myLay.addWidget(Form)
 
         self.MangaImage = QtWidgets.QLabel(Form)
@@ -36,8 +38,8 @@ class MangaView(QtWidgets.QWidget):
         self.MangaImage.setScaledContents(True)
         self.MangaImage.setObjectName("MangaImage")
         self.MangaName = QtWidgets.QLabel(Form)
-        self.MangaName.setGeometry(QtCore.QRect(0, 175, 125, 45))
-        self.MangaName.setMinimumSize(QtCore.QSize(125, 45))
+        self.MangaName.setGeometry(QtCore.QRect(0, 175, 125, 41))
+        self.MangaName.setMinimumSize(QtCore.QSize(125, 41))
         palette = QtGui.QPalette()
         brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
         brush.setStyle(QtCore.Qt.SolidPattern)
@@ -197,9 +199,31 @@ class MangaView(QtWidgets.QWidget):
         self.MangaName.setIndent(5)
         self.MangaName.setObjectName("MangaName")
 
+
+        self.MangaChapter = QtWidgets.QLabel(Form)
+        self.MangaChapter.setGeometry(QtCore.QRect(0, 210, 125, 21))
+        self.MangaChapter.setMinimumSize(QtCore.QSize(125, 21))
+        brush = QtGui.QBrush(QtGui.QColor(195, 195, 195))
+        brush.setStyle(QtCore.Qt.SolidPattern)
+        palette.setBrush(QtGui.QPalette.Active, QtGui.QPalette.WindowText, brush)
+        self.MangaChapter.setPalette(palette)
+        font = QtGui.QFont()
+        font.setPointSize(8)
+        self.MangaChapter.setFont(font)
+        self.MangaChapter.setAutoFillBackground(True)
+        self.MangaChapter.setFrameShape(QtWidgets.QFrame.NoFrame)
+        self.MangaChapter.setFrameShadow(QtWidgets.QFrame.Plain)
+        self.MangaChapter.setTextFormat(QtCore.Qt.PlainText)
+        self.MangaChapter.setScaledContents(True)
+        self.MangaChapter.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        self.MangaChapter.setWordWrap(True)
+        self.MangaChapter.setIndent(5)
+        self.MangaChapter.setObjectName("MangaChapter")
+
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
         self.MangaName.setText(_translate("Form", self.name))
+        self.MangaChapter.setText(_translate("Form", str(self.nbr_chapter) + " Chapters"))

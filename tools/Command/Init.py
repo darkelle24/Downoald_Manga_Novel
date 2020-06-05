@@ -3,7 +3,7 @@ from tools.Load.loadAllManga import loadAllManga
 from tools.Load.loadUpdate import loadUpdate
 import os
 
-def init(directory: str):
+def init(directory: str = "./manga"):
     os.system('color')
     sites = loadAllSite()
     mangas = loadAllManga(directory)

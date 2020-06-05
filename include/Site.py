@@ -288,6 +288,7 @@ class Site:
                 self.__managerDownloaderText__(urlChapterList, manga, opts)
             if ("notification" in opts):
                 basicNotif(opts["notification"], manga.name, len(urlChapterList), mangatype)
+            manga.refresh()
 
     def __managerDownloaderText__(self, urlChapterList: List[Tuple[int, str]], manga: Manga, opts: Dict):
         urlChapterList = self.__addPathToChpterList__(urlChapterList, manga, MangaType.NOVEL)
