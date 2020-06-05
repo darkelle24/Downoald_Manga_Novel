@@ -54,3 +54,7 @@ class isekaiscan(Site):
             return UrlType.ONECHAPTER
         else:
             return UrlType.ALLCHAPTER
+
+    def getMangaImage(self, soup: BeautifulSoup)-> str :
+        img = soup.find("div", attrs={"class": "summary_image"}).find("img")
+        return img.get("data-src")

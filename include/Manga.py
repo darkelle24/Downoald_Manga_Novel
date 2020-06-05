@@ -10,16 +10,20 @@ class MangaEncoder(JSONEncoder):
 class Manga:
     name: str
     path: str
+    pathImage: str
     nbrChapterManga: int
     nbrChapterNovel: int
     sites: List[Tuple[str, str, str]]
     errorDownload: List[Tuple[int, int]]
 
-    def __init__(self, name: str = "", path:str = "", sites: List[Tuple[str, str]] = [], errorDownload: List[Tuple[int, int]] = []):
+    def __init__(self, name: str = "", path:str = "", sites: List[Tuple[str, str]] = [], errorDownload: List[Tuple[int, int]] = [], pathImage: str = ""):
         self.name = name
         self.path = path
         self.sites = sites
         self.errorDownload = errorDownload
+        self.nbrChapterManga = 0
+        self.nbrChapterNovel = 0
+        self.pathImage = pathImage
         self.refresh()
 
     def refresh(self):
@@ -55,7 +59,10 @@ class Manga:
             self.name = data["name"]
             self.path = data["path"]
             self.sites = data["sites"]
-            self.errorDownload = data["errorDownload"]
+            self.errorDownload = data.get("errorDownload", [])
+            self.pathImage = data.get("pathImage", "")
+            if (self.pathImage != "" and os.path.isfile(self.pathImage) == False):
+                self.pathImage = ""
             self.refresh()
 
     def save(self, path: str=None)->NoReturn:

@@ -105,6 +105,17 @@ class Site:
             urlChapter = urlChapter[:-1]
         return urlChapter[:urlChapter.rfind("/")]
 
+    def getMangaImage(self, soup: BeautifulSoup)-> str :
+        """Allows to recover the front image of manga/novel (Optionnel)
+
+        Args:
+            soup (BeautifulSoup): Have HTML code of the web page in form of BeautifulSoup
+
+        Returns:
+            str: URL of the front image
+        """
+        return ""
+
 
 
 
@@ -116,6 +127,7 @@ class Site:
                 return "ERROR", -1, ("","","")
             soup = BeautifulSoup(r.text, features="html.parser")
         info = self.recupInfoManga(soup)
+        info["frontImage"] = self.getMangaImage(soup)
         info["urlSite"] = self.url
         info["urlInfo"] = url
         return (info)
@@ -256,10 +268,16 @@ class Site:
         return urlChapterList
 
     def __createNewManga__(self, info: Dict[str, str], urlInfo: str, mangas: List[Manga], directory: str)->List[Manga]:
-        correctNamePath = remove(info["name"].strip() ,'\\/:*?"<>|')
+        correctNamePath = remove(info["name"].strip(), '\\/:*?"<>|')
         path = os.path.join(directory, correctNamePath)
         os.makedirs(path, exist_ok=True)
-        manga = Manga(info["name"], path, 0, [(self.url, urlInfo)])
+        pathImage = ""
+        if (info["frontImage"] != ""):
+            pathImage = os.path.join(path, "." + remove(info["frontImage"][info["frontImage"].rfind("/"):], '\\/:*?"<>|'))
+            value = downloadImage(pathImage, info["frontImage"])
+            if (value == None or False):
+                pathImage = ""
+        manga = Manga(info["name"], path, [(self.url, urlInfo)], [], pathImage)
         manga.save()
         mangas.append(manga)
         return (mangas)

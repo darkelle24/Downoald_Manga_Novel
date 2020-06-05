@@ -3,6 +3,7 @@ from include.Enum import MangaType
 from typing import List, Dict
 from math import *
 import sys
+import time
 
 def translateModule(dictio: Dict, opt: str, mangatype: MangaType)-> Dict:
     if (opt.startswith("-t") or opt.startswith("--trad=")):
@@ -46,4 +47,5 @@ def translate(texts: str, opts: Dict)-> str:
     list_txt = list_txt + [copy]
     for txt in list_txt:
         finale = finale + translator.translate(txt, dest=dest, src="en").text
+        time.sleep(1)
     return finale

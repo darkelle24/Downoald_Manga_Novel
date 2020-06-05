@@ -4,7 +4,7 @@ from tools.Other.checkModuleExist import module_exists
 from include.Enum import MangaType
 
 def notificationOpt(dictio: Dict, opt: str)-> Dict:
-    if (opt == ("-n") or opt == ("--notification")):
+    if (opt == ("-N") or opt == ("--notification")):
         if "notification" not in sys.modules:
             if (module_exists("plyer") == True):
                 notif = __import__("plyer")
