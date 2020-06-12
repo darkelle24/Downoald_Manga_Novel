@@ -1,7 +1,8 @@
-from typing import List, Tuple, Set, NoReturn
 import json
-from json import JSONEncoder
 import os
+from json import JSONEncoder
+from typing import List, NoReturn, Set, Tuple
+
 
 class MangaEncoder(JSONEncoder):
         def default(self, obj): # pylint: disable=method-hidden
@@ -32,6 +33,7 @@ class Manga:
 
     def countChapterManga(self):
         path = os.path.join(self.path, "Manga")
+        self.nbrChapterManga = 0
 
         if (os.path.isdir(path)):
             listChapter = os.listdir(path)
@@ -44,6 +46,7 @@ class Manga:
 
     def countChapterNovel(self):
         path = os.path.join(self.path, "Novel")
+        self.nbrChapterNovel = 0
 
         if (os.path.isdir(path)):
             listChapter = os.listdir(path)

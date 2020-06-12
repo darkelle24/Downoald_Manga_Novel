@@ -8,6 +8,8 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from include.Manga import Manga
+from include.Enum import MangaType
 
 class MangaFrame(QtWidgets.QFrame):
     def __init__(self, parent=None):
@@ -41,12 +43,14 @@ class MangaFrame(QtWidgets.QFrame):
 
 
 class MangaView(QtWidgets.QWidget):
-    def __init__(self, name = "", path = "", nbr_chapter = 0, parent=None, *args, **kwargs):
-        super().__init__(parent=parent, *args, **kwargs)
-        self.name = name
-        self.path = path
+    manga: Manga
+    mangatype: MangaType
 
-        self.nbr_chapter = nbr_chapter
+    def __init__(self, manga, mangatype, parent=None, *args, **kwargs):
+        super().__init__(parent=parent, *args, **kwargs)
+
+        self.manga = manga
+        self.mangatype = mangatype
 
         self.myLay = QtWidgets.QVBoxLayout()
         self.myLay.setContentsMargins(3, 3, 3, 3)
@@ -63,7 +67,7 @@ class MangaView(QtWidgets.QWidget):
         self.MangaImage.setGeometry(QtCore.QRect(0, 0, 128, 175))
         self.MangaImage.setMinimumSize(QtCore.QSize(128, 175))
         self.MangaImage.setText("")
-        self.MangaImage.setPixmap(QtGui.QPixmap(self.path))
+        self.MangaImage.setPixmap(QtGui.QPixmap(self.manga.pathImage))
         self.MangaImage.setScaledContents(True)
         self.MangaImage.setObjectName("MangaImage")
         self.MangaName = QtWidgets.QLabel(Form)
@@ -254,5 +258,10 @@ class MangaView(QtWidgets.QWidget):
 
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
-        self.MangaName.setText(_translate("Form", self.name))
-        self.MangaChapter.setText(_translate("Form", str(self.nbr_chapter) + " Chapters"))
+        self.MangaName.setText(_translate("Form", self.manga.name))
+        if (self.mangatype == MangaType.MANGA):
+            self.MangaChapter.setText(_translate("Form", str(self.manga.nbrChapterManga) + " Chapters"))
+        else:
+            self.MangaChapter.setText(_translate("Form", str(self.manga.nbrChapterNovel) + " Chapters"))
+
+

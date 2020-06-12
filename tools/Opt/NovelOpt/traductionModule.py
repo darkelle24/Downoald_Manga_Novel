@@ -1,9 +1,11 @@
-from tools.Other.checkModuleExist import module_exists
-from include.Enum import MangaType
-from typing import List, Dict
-from math import *
 import sys
 import time
+from math import *
+from typing import Dict, List
+
+from include.Enum import MangaType
+from tools.Other.checkModuleExist import module_exists
+
 
 def translateModule(dictio: Dict, opt: str, mangatype: MangaType)-> Dict:
     if (opt.startswith("-t") or opt.startswith("--trad=")):

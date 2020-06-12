@@ -1,11 +1,12 @@
 #!/usr/bin/python3
 
+import sys
 from sys import exit
+
+from include.Update import getUpdate, setUpdateWithUrl
+from tools.Command.ChangeDirectory import changeDirectory
 from tools.Command.DownloadWithUrl import downloadWithUrl
 from tools.Command.Init import init
-from tools.Command.ChangeDirectory import changeDirectory
-from include.Update import setUpdateWithUrl, getUpdate
-import sys
 
 ##def command(cmd: str):
 ##    switcher={

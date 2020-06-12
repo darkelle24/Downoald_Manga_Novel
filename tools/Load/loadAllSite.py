@@ -1,6 +1,8 @@
-from typing import List
 import os
+from typing import List
+
 from include.Site import Site
+
 
 def loadAllSite()->List[Site]:
     sites = []
@@ -11,4 +13,3 @@ def loadAllSite()->List[Site]:
             site = getattr(mod, siteName)
             sites.append(site())
     return sites
-

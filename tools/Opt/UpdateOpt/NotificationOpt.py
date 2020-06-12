@@ -1,7 +1,9 @@
-from typing import Dict
 import sys
-from tools.Other.checkModuleExist import module_exists
+from typing import Dict
+
 from include.Enum import MangaType
+from tools.Other.checkModuleExist import module_exists
+
 
 def notificationOpt(dictio: Dict, opt: str)-> Dict:
     if (opt == ("-N") or opt == ("--notification")):

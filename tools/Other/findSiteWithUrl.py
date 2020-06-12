@@ -1,5 +1,7 @@
-from include.Site import Site
 from typing import List
+
+from include.Site import Site
+
 
 def findSiteWithUrl(url: str, sites: List[Site])->Site:
     for site in sites:

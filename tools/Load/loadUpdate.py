@@ -1,10 +1,12 @@
-import os
 import json
+import os
 from typing import List
+
+from include.Enum import MangaType
+from include.Site import Site
 from include.Update import Update
 from tools.Other.findSiteWithUrl import findSiteWithUrl
-from include.Site import Site
-from include.Enum import MangaType
+
 
 def loadUpdate(directory: str, sites: Site)->List[Update]:
     listUpdate = []

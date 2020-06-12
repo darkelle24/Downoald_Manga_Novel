@@ -1,7 +1,9 @@
-from termcolor import colored
+import os
+
 import requests
 from bs4 import BeautifulSoup
-import os
+from termcolor import colored
+
 
 def print_error_request(e, url):
     print(colored("\nRequest Error on " + '\''+ url + '\'' + " with error message:\n\t", "red"), e)

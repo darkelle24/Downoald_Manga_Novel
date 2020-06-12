@@ -1,15 +1,17 @@
-from tools.Other.findSiteWithUrl import findSiteWithUrl
-from include.Enum import UrlType, MangaType
-from tools.Other.remove import remove
-from include.Site import Site
-from include.Manga import Manga
 import json
-from typing import List, Dict
 import os
 import time
-from tools.Opt.UpdateOpt.timeOpt import timerOpt
+from typing import Dict, List
+
+from include.Enum import MangaType, UrlType
+from include.Manga import Manga
+from include.Site import Site
 from tools.Opt.UpdateOpt.AllChapter import allOpt
 from tools.Opt.UpdateOpt.NotificationOpt import notificationOpt
+from tools.Opt.UpdateOpt.timeOpt import timerOpt
+from tools.Other.findSiteWithUrl import findSiteWithUrl
+from tools.Other.remove import remove
+
 
 class Update:
     url: str

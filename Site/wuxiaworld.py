@@ -1,8 +1,11 @@
-from include.Site import Site, UrlType, MangaType
-from typing import Tuple, List, Union, Dict
-from bs4 import BeautifulSoup
-from tools.Other.getPage import getAPage
 import os
+from typing import Dict, List, Tuple, Union
+
+from bs4 import BeautifulSoup
+
+from include.Site import MangaType, Site, UrlType
+from tools.Other.getPage import getAPage
+
 
 class wuxiaworld(Site):
     url = "wuxiaworld.site"

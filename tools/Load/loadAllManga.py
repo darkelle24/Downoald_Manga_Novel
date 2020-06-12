@@ -1,6 +1,8 @@
-from typing import List
 import os
+from typing import List
+
 from include.Manga import Manga
+
 
 def loadAllManga(directory: str)->List[Manga]:
     mangas = []

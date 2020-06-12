@@ -1,7 +1,9 @@
-from tools.Other.findSiteWithUrl import findSiteWithUrl
-from include.Site import Site
 from typing import List
+
 from include.Manga import Manga
+from include.Site import Site
+from tools.Other.findSiteWithUrl import findSiteWithUrl
+
 
 def downloadWithUrl(opts: List[str], directory: str, sites: List[Site], mangas: List[Manga]):
     url = ""

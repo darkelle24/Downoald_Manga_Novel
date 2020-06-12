@@ -1,5 +1,6 @@
-import os
 import json
+import os
+
 
 def chapterMetaData(error_list, directory):
     metadatapath = directory + ".metadata"

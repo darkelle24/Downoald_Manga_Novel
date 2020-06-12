@@ -1,7 +1,10 @@
-import os
-import requests
 import imghdr
+import os
+
+import requests
+
 from tools.Other.getPage import getAPage
+
 
 def downloadImage(path, url):
     if not (os.path.isfile(path)):

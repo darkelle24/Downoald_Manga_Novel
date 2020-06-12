@@ -1,19 +1,23 @@
+import concurrent.futures
+import os
+import shutil
+import sys
+from typing import Dict, List, Tuple, Union
+
+from bs4 import BeautifulSoup
+from termcolor import colored
+from tqdm import tqdm
+
+from include.Enum import MangaType, UrlType
+from include.Manga import Manga
+from tools.Opt.MangaOpt.numberWorkerOpt import number_worker
+from tools.Opt.NovelOpt.traductionModule import translate, translateModule
+from tools.Opt.UpdateOpt.NotificationOpt import basicNotif, notificationOpt
 from tools.Other.downloadImage import downloadImage
-from tools.Other.SiteMetaData import chapterInfo
 from tools.Other.getPage import getAPage
 from tools.Other.remove import remove
-from include.Manga import Manga
-from typing import Tuple, List, Union, Dict
-from termcolor import colored
-from bs4 import BeautifulSoup
-from tqdm import tqdm
-from tools.Opt.NovelOpt.traductionModule import translateModule, translate
-from include.Enum import UrlType, MangaType
-import concurrent.futures
-import os, shutil
-from tools.Opt.UpdateOpt.NotificationOpt import basicNotif, notificationOpt
-from tools.Opt.MangaOpt.numberWorkerOpt import number_worker
-import sys
+from tools.Other.SiteMetaData import chapterInfo
+
 
 def __getChapterNbr__(elem: List[Tuple[str, int, int, str]]):
     return float(elem[0][2])

@@ -169,15 +169,25 @@ class Ui_MainWindow(object):
         self.gridLayout.setContentsMargins(0, 0, 0, 0)
         self.gridLayout.setSpacing(0)
         self.gridLayout.setObjectName("gridLayout")
-        self.scrollArea = QtWidgets.QScrollArea(self.centralwidget)
+
+        self.Container = QtWidgets.QWidget(self.centralwidget)
+        self.Container.setGeometry(QtCore.QRect(0, 0, 875, 550))
+        self.Container.setMinimumSize(QtCore.QSize(875, 550))
+        self.Container.setObjectName("scrollAreaWidgetContents")
+
+
+        self.scrollArea = QtWidgets.QScrollArea(self.Container)
         self.scrollArea.setFrameShape(QtWidgets.QFrame.NoFrame)
         self.scrollArea.setWidgetResizable(True)
         self.scrollArea.setObjectName("scrollArea")
         self.scrollAreaWidgetContents = QtWidgets.QWidget()
         self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 875, 550))
+        self.scrollArea.setMinimumSize(QtCore.QSize(875, 550))
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
-        self.gridLayout.addWidget(self.scrollArea, 0, 0, 1, 1)
+
+
+        self.gridLayout.addWidget(self.Container, 0, 0, 1, 1)
         self.widget = QtWidgets.QWidget(self.centralwidget)
         font = QtGui.QFont()
         font.setFamily("Gadugi")
