@@ -8,6 +8,16 @@ class MangaEncoder(JSONEncoder):
         def default(self, obj): # pylint: disable=method-hidden
             return obj.__dict__
 
+def sortMethod(string: str):
+    number = 0
+
+    splited = string.split(" ")
+    try:
+        number = int(splited[1].replace(".txt",""))
+    except:
+        number = -1
+    return number
+
 class Manga:
     name: str
     path: str
@@ -79,3 +89,26 @@ class Manga:
             if (siteReg[0] == site):
                 return True
         return False
+
+    def getListChapterManga(self)->List[str]:
+        path = os.path.join(self.path, "Manga")
+        chapter = []
+
+        if (os.path.isdir(path)):
+            listChapter = os.listdir(path)
+            for file in listChapter :
+                if (file != ".info.json" and file.startswith("Chapter") and os.path.isdir(os.path.join(path, file)) == True
+                    and os.path.isfile(os.path.join(path, file, ".info.json")) == True):
+                    chapter.append(file)
+        return sorted(chapter, key=sortMethod, reverse=True)
+
+    def getListChapterNovel(self)->List[str]:
+        path = os.path.join(self.path, "Novel")
+        chapter = []
+
+        if (os.path.isdir(path)):
+            listChapter = os.listdir(path)
+            for file in listChapter :
+                if (file != ".info.json" and file.startswith("Chapter") and os.path.isfile(os.path.join(path, file)) == True):
+                    chapter.append(file)
+        return sorted(chapter, key=sortMethod, reverse=True)
