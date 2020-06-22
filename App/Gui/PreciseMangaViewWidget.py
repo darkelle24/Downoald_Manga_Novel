@@ -147,7 +147,7 @@ class PreciseMangaView(QtWidgets.QWidget):
             for onechap in chapterNovel:
                 item = QtWidgets.QListWidgetItem()
                 self.NovelView.addItem(item)
-                item.setText(_translate("MainWindow", onechap))
+                item.setText(_translate("MainWindow", onechap.replace(".txt", "")))
             ##self.NovelView.setSortingEnabled(__sortingEnabled)
 
             self.MangaImage.setPixmap(QtGui.QPixmap(self.manga.pathImage))

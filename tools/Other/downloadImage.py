@@ -6,7 +6,7 @@ import requests
 from tools.Other.getPage import getAPage
 
 
-def downloadImage(path, url):
+def downloadImage(path, url)->bool:
     if not (os.path.isfile(path)):
         r = getAPage(url)
         if (r == None or imghdr.what(None, r.content) == None):

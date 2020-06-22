@@ -5,7 +5,7 @@ import sys
 from typing import Dict, List, Tuple, Union
 
 from bs4 import BeautifulSoup
-from termcolor import colored
+from termcolor import colored, cprint
 from tqdm import tqdm
 
 from include.Enum import MangaType, UrlType
@@ -127,8 +127,8 @@ class Site:
         if (soup == None):
             r = getAPage(url)
             if (r == None):
-                print(colored(("Problem Info Page", "red")))
-                return "ERROR", -1, ("","","")
+                cprint("Problem Info Page", 'red', file=sys.stderr)
+                return None
             soup = BeautifulSoup(r.text, features="html.parser")
         info = self.recupInfoManga(soup)
         info["frontImage"] = self.getMangaImage(soup)
@@ -217,7 +217,7 @@ class Site:
         with concurrent.futures.ThreadPoolExecutor(max_workers=opts["workers"]) as executor :
             for urlImagesOneChapter in urlImages :
                 futures_list = [executor.submit(self.__downloadOneImage__, image) for image in urlImagesOneChapter]
-                for f in tqdm(concurrent.futures.as_completed(futures_list, 120), total=len(futures_list), leave=False, desc= "        Chapter " + urlImagesOneChapter[0][2], unit="img"):
+                for f in tqdm(concurrent.futures.as_completed(futures_list), total=len(futures_list), leave=False, desc= "        Chapter " + urlImagesOneChapter[0][2], unit="img"):
                     if (f.result() == False):
                         errorChapter.append(urlImagesOneChapter[0][2])
                         bar.write("Problem " + urlImagesOneChapter[0][2], file=sys.stderr)
@@ -257,7 +257,7 @@ class Site:
     def __downloadAllNovel__(self, urlChapter: List[Tuple[str, str]], opts: Dict, bar: tqdm = None):
         with concurrent.futures.ThreadPoolExecutor(max_workers=opts["workers"]) as executor :
             futures_list = [executor.submit(self.__downoaldNovelOneChapter__, urlOneChapter, opts) for urlOneChapter in urlChapter]
-            for f in concurrent.futures.as_completed(futures_list, 120):
+            for f in concurrent.futures.as_completed(futures_list):
                 if (f.result() != ""):
                     bar.write("Problem " + f.result(), file=sys.stderr)
                 if not (bar is None):
@@ -291,6 +291,8 @@ class Site:
         urlImages = []
 
         info = self.__getInfoManga__(urlInfo, soupInfo)
+        if (info == None):
+            return None
         found = [x for x in mangas if x.name == info["name"]]
         if (found == []):
             mangas = self.__createNewManga__(info, urlInfo, mangas, opts["directory"])
@@ -322,7 +324,7 @@ class Site:
         urlImages = self.__recupAllImageFromChapterUrl__(urlChapterList)
         self.__progressBarAllInitManga__(urlImages, manga.name, opts)
 
-    def __getType__(self, opts: str)->MangaType:
+    def __getType__(self, opts: List[str] = [])->MangaType:
         if (self.siteTypeManga != []):
             for opt in opts:
                 if (opt == '-m' or opt == "--manga"):
@@ -354,7 +356,7 @@ class Site:
 
         return dictio
 
-    def __gestOpt__(self, opts: List[str], typeUrl:UrlType, mangatype: MangaType, directory: str)-> Dict:
+    def __gestOpt__(self, opts: List[str], typeUrl:UrlType = UrlType.NONE, mangatype: MangaType = MangaType.NONE, directory: str = "./")-> Dict:
         dictio = self.__init_opt__(directory)
 
         for opt in opts :

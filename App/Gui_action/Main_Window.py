@@ -22,6 +22,9 @@ class Ui_MainWindow_Action(Ui_MainWindow):
         elif (self.NovelButton.isChecked()):
             self.initMangaList(MangaType.NOVEL)
 
+    def refreshPreciseManga(self):
+        self.preciseManga.retranslateUi(self.preciseManga.PreciseMangaWidget)
+
     def lambdaPreciseManga(self, manga):
         return lambda event : self.showPreciseManga(event, manga)
 
@@ -52,7 +55,7 @@ class Ui_MainWindow_Action(Ui_MainWindow):
                 self.MangaButton.setChecked(False)
                 self.MangaButton.setEnabled(True)
                 self.preciseManga.manga = manga
-                self.preciseManga.retranslateUi(self.preciseManga.PreciseMangaWidget)
+                self.refreshPreciseManga()
                 self.containerPreciseManga.setVisible(True)
 
     def setupUi(self, MainWindow):
@@ -77,9 +80,15 @@ class Ui_MainWindow_Action(Ui_MainWindow):
         self.containerPreciseManga = QtWidgets.QFrame(self.Container)
         self.containerPreciseManga.setMinimumSize(QtCore.QSize(875, 550))
 
+        self.preciseManga = None
         if (len(self.mangas) != 0):
             self.preciseManga = PreciseMangaView(self.mangas[0], self.containerPreciseManga)
             self.preciseManga.setMinimumSize(QtCore.QSize(875, 550))
+        else:
+            self.preciseManga = PreciseMangaView(None, self.containerPreciseManga)
+            self.preciseManga.setMinimumSize(QtCore.QSize(875, 550))
+        self.shortcutRefreshPM = QtWidgets.QShortcut(QtGui.QKeySequence("Ctrl+R"), self.preciseManga)
+        self.shortcutRefreshPM.activated.connect(self.refreshPreciseManga)
         self.containerPreciseManga.setVisible(False)
 
     def on_check_Manga(self,is_toggle):

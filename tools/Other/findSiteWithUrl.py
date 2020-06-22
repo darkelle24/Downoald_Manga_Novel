@@ -4,8 +4,14 @@ from include.Site import Site
 
 
 def findSiteWithUrl(url: str, sites: List[Site])->Site:
-    for site in sites:
-        if (url.split("/")[2] == site.url):
-            return site
+    splited = url.split("/")
+
+    if (len(splited) >= 2):
+        for site in sites:
+            if (splited[2] == site.url):
+                return site
+    else:
+        print("This url is not an valid url")
+        return None
     print("This site is not implemented")
     return None
