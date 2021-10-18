@@ -11,9 +11,12 @@ def print_error_request(e, url):
     cprint(" with error message:\n\t", "red", end='')
     print(e)
 
-def getAPage(url, printError:bool = False):
+def getAPage(url, printError:bool = False, image: bool = False):
     try :
-        r = requests.get(url)
+        if (image):
+            r = requests.get(url, stream = True)
+        else:
+            r = requests.get(url)
     except requests.exceptions.RequestException as msg:
         if (printError == True):
             print_error_request(msg, url)

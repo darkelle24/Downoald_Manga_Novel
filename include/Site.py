@@ -150,7 +150,7 @@ class Site:
     def __getAllChapter__(self, url: str) -> Union[List[Tuple[str, str]], BeautifulSoup]:
         list_chapter = []
 
-        r = getAPage(url)
+        r = getAPage(url, True)
         if (r == None):
             return None
         soup = BeautifulSoup(r.text, features="html.parser")
