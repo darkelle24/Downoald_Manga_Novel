@@ -5,6 +5,7 @@ from PIL import Image
 from io import BytesIO
 from distutils.dir_util import copy_tree
 from multiprocessing import Pool
+from math import *
 
 def getNameDir(dir):
     try:
@@ -40,25 +41,39 @@ def getName(file):
 def openFile(image):
     return Image.open(image)
 
+def get_concat_v(im1, im2):
+    dst = Image.new('RGB', (im1.width, im1.height + im2.height))
+    dst.paste(im1, (0, 0))
+    dst.paste(im2, (0, im1.height))
+    return dst
+
 def reduceFile(images):
     openMap = list(map(openFile, images))
-    width = 595
+    widthA4 = 595
+    heightA4 = 842
     toReturn = []
+    newImage = None
 
     for oneImage in openMap:
-        widthImage , _= oneImage.size
-        if (widthImage > width):
-            width = widthImage
-    for oneImage in openMap:
-        _, height = oneImage.size
+        width, height = oneImage.size
         try:
-            oneImage.resize((width, height))
-            output = BytesIO()
-            oneImage.save(output, format=oneImage.format, optimize=True, quality=65)
-            toReturn.append(output.getvalue())
-            oneImage.close()
-        except:
-            oneImage.close()
+            resizeImage = oneImage.resize((widthA4, ceil((height/width) * widthA4)))
+            if (newImage == None):
+                newImage = resizeImage
+            else:
+                newImage = get_concat_v(newImage, resizeImage)
+        except e:
+            print(e)
+    newWidth, newHeight = newImage.size
+    numberPart = ceil(newHeight / heightA4)
+    for x in range(numberPart):
+        cropImage = newImage.crop((0, x * heightA4, widthA4, (x+1) * heightA4))
+        output = BytesIO()
+        cropImage.save(output, format='JPEG', optimize=True, quality=65)
+        toReturn.append(output.getvalue())
+
+    for oneImage in openMap:
+        oneImage.close()
     return toReturn
 
 
